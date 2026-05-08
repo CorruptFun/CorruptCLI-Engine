@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Boilerplate | Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        organization: { gold: '#D4AF37', lightgold: '#F3E5AB', dark: '#111111', black: '#000000' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#0a0a0a] text-white font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+    <!-- Ambient Background Glow -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-organization-gold/10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-organization-gold/5 blur-[120px] rounded-full"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="border-b border-white/5 bg-black/50 backdrop-blur-md py-5 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-2xl font-serif text-white tracking-wide"><span class="text-organization-gold">SaaS Boilerplate</span> Admin</h1>
+            <button id="logout-btn" class="hidden text-xs text-gray-400 hover:text-organization-gold uppercase tracking-[0.2em] transition-colors duration-300">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="flex-grow flex items-center justify-center p-6 relative z-10">
+        <div class="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <div class="flex justify-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
+                    <svg class="w-6 h-6 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+            </div>
+            <h2 class="text-3xl font-serif text-white mb-2 text-center">Secure Access</h2>
+            <p class="text-gray-400 text-sm mb-8 text-center font-light">Enter the master admin email to receive a passwordless login link.</p>
+            <form id="login-form" class="space-y-5">
+                <div>
+                    <input type="email" id="login-email" placeholder="admin@example.com" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-organization-gold focus:bg-white/10 outline-none transition-all duration-300 font-light placeholder-gray-500">
+                </div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="relative flex items-center justify-center">
+                        <input type="checkbox" id="login-remember" checked class="peer appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-organization-gold checked:border-organization-gold transition-all cursor-pointer">
+                        <svg class="absolute w-3 h-3 text-organization-black pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <label for="login-remember" class="text-sm text-gray-400 font-light cursor-pointer select-none hover:text-white transition-colors">Remember this device for 30 days</label>
+                </div>
+                <button type="submit" id="login-btn" class="w-full py-4 bg-organization-gold rounded-full text-organization-black text-sm font-semibold tracking-[0.2em] uppercase hover:bg-white transition-colors shadow-[0_0_20px_rgba(212,175,55,0.3)]">Send Magic Link</button>
+            </form>
+            <p id="login-error" class="text-red-400 text-sm mt-5 text-center hidden font-light bg-red-400/10 py-2 rounded-lg"></p>
+            <p id="login-success" class="text-green-400 text-sm mt-5 text-center hidden font-light bg-green-400/10 py-2 rounded-lg border border-green-400/20">Check your inbox! A secure magic link has been sent.</p>
+        </div>
+    </div>
+
+    <!-- Waiting Screen -->
+    <div id="waiting-screen" class="hidden flex-grow flex items-center justify-center p-6 relative z-10">
+        <div class="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] text-center">
+            <div class="flex justify-center mb-8">
+                <div class="relative">
+                    <div class="w-20 h-20 rounded-full border-2 border-organization-gold/20 border-t-organization-gold animate-spin"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-3xl font-serif text-white mb-4">Check Your Email</h2>
+            <p class="text-gray-400 text-sm mb-8 font-light leading-relaxed">
+                A secure login link has been sent to <span id="display-email" class="text-white font-medium"></span>.<br><br>
+                Please click the link in your email to verify your session. This page will automatically refresh once you're authenticated.
+            </p>
+            <button onclick="window.location.reload()" class="text-xs text-gray-500 hover:text-organization-gold uppercase tracking-[0.2em] transition-colors">Didn't get it? Try again</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="hidden flex-grow max-w-7xl mx-auto w-full px-6 lg:px-8 py-12 relative z-10">
+        
+        <!-- Tabs -->
+        <div class="flex space-x-8 border-b border-white/10 mb-10 overflow-x-auto hide-scrollbar">
+            <button id="tab-events" class="pb-4 px-2 whitespace-nowrap text-organization-gold border-b-2 border-organization-gold uppercase tracking-[0.15em] text-xs font-semibold transition-colors duration-300">Events & Rosters</button>
+            <button id="tab-manage" class="pb-4 px-2 whitespace-nowrap text-gray-500 hover:text-white uppercase tracking-[0.15em] text-xs font-medium transition-colors duration-300">Manage Schedule</button>
+            <button id="tab-customers" class="pb-4 px-2 whitespace-nowrap text-gray-500 hover:text-white uppercase tracking-[0.15em] text-xs font-medium transition-colors duration-300">Customer List</button>
+        </div>
+
+        <!-- Events View -->
+        <div id="view-events" class="animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8">
+                <div class="md:col-span-4 bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <button id="admin-calendar-prev" class="w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-gray-400 hover:text-white hover:bg-organization-gold/20 transition border border-white/10">&larr;</button>
+                        <div id="admin-calendar-month-label" class="text-white font-serif uppercase tracking-widest text-sm font-semibold"></div>
+                        <button id="admin-calendar-next" class="w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-gray-400 hover:text-white hover:bg-organization-gold/20 transition border border-white/10">&rarr;</button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Su</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Mo</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Tu</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">We</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Th</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Fr</div>
+                        <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Sa</div>
+                    </div>
+                    <div id="admin-calendar-days" class="grid grid-cols-7 gap-1">
+                        <!-- JS will inject days here -->
+                    </div>
+                </div>
+
+                <div class="md:col-span-8 bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-md flex flex-col">
+                    <label class="block text-gray-500 text-xs mb-4 uppercase tracking-[0.2em] font-medium border-b border-white/10 pb-4">Events on Selected Date</label>
+                    <div class="flex flex-wrap gap-3 flex-grow content-start" id="admin-event-pills">
+                        <div class="text-gray-500 text-sm py-2">Select a date to view events.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-black/40 border-b border-white/10 text-gray-400 uppercase tracking-[0.2em] text-[10px] font-semibold">
+                            <tr>
+                                <th class="px-8 py-5">Guest Name</th>
+                                <th class="px-8 py-5">Email Address</th>
+                                <th class="px-8 py-5">Payment Method</th>
+                                <th class="px-8 py-5">Status</th>
+                                <th class="px-8 py-5 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roster-tbody" class="divide-y divide-white/5 text-sm font-light">
+                            <tr><td colspan="5" class="px-8 py-12 text-center text-gray-500">Select a event to view the roster</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Schedule View -->
+        <div id="view-manage" class="hidden animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <!-- Form -->
+                <div class="lg:col-span-4 bg-white/5 border border-white/10 rounded-3xl p-8 self-start shadow-2xl backdrop-blur-md">
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
+                            <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        </div>
+                        <h3 id="manage-form-title" class="text-2xl font-serif text-white">Add New Event</h3>
+                    </div>
+                    
+                    <form id="event-form" class="space-y-5">
+                        <input type="hidden" id="manage-id">
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Event Title</label>
+                            <input type="text" id="manage-title" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Instructor</label>
+                            <input type="text" id="manage-instructor" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                        </div>
+                        <div class="grid grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Price ($)</label>
+                                <input type="number" id="manage-price" value="30" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                            </div>
+                            <div>
+                                <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Capacity</label>
+                                <input type="number" id="manage-capacity" value="6" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Date</label>
+                            <input type="date" id="manage-date" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Start Time</label>
+                                <input type="time" id="manage-time" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                            </div>
+                            <div>
+                                <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Duration</label>
+                                <select id="manage-duration" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                                    <option value="30">30 Min</option>
+                                    <option value="45">45 Min</option>
+                                    <option value="50">50 Min</option>
+                                    <option value="60" selected>60 Min</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="recurring-group" class="pt-6 border-t border-white/10 mt-6">
+                            <label class="flex items-center space-x-3 text-sm text-gray-300 cursor-pointer group">
+                                <div class="relative flex items-center justify-center">
+                                    <input type="checkbox" id="manage-recurring" class="peer appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-organization-gold checked:border-organization-gold transition-all" onchange="document.getElementById('recurring-weeks-group').classList.toggle('hidden')">
+                                    <svg class="absolute w-3 h-3 text-organization-black pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="group-hover:text-white transition-colors">Repeat Weekly</span>
+                            </label>
+                            <div id="recurring-weeks-group" class="hidden mt-5">
+                                <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">For how many weeks?</label>
+                                <select id="manage-weeks" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white outline-none text-sm transition-all font-light focus:border-organization-gold appearance-none cursor-pointer">
+                                    <option value="4">4 Weeks</option>
+                                    <option value="8">8 Weeks</option>
+                                    <option value="12">12 Weeks</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4 pt-6">
+                            <button type="submit" id="manage-save-btn" class="flex-1 py-4 rounded-full bg-organization-gold text-organization-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Save Event</button>
+                            <button type="button" onclick="resetManageForm()" class="px-8 py-4 rounded-full border border-white/20 text-gray-400 hover:text-white hover:border-white text-xs uppercase tracking-[0.2em] font-semibold transition-all">Clear</button>
+                        </div>
+                        <div class="pt-6 mt-6 border-t border-white/10">
+                            <h4 class="text-sm text-organization-gold mb-3 uppercase tracking-widest">Quick Setup</h4>
+                            <button type="button" onclick="bulkGenerateSchedule()" class="w-full py-3 rounded-full border border-organization-gold text-organization-gold hover:bg-organization-gold hover:text-black transition-colors text-xs uppercase tracking-[0.2em] font-bold">Bulk Generate M-Th Schedule (12 Weeks)</button>
+                        </div>
+
+                    </form>
+                </div>
+                
+                <!-- Schedule List -->
+                <div class="lg:col-span-8 bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md flex flex-col h-[750px]">
+                    <div class="px-8 py-6 border-b border-white/10 bg-black/20 flex justify-between items-center">
+                        <h3 class="text-xl font-serif text-white">Active Schedule</h3>
+                        <div class="text-xs text-organization-gold bg-organization-gold/10 px-3 py-1 rounded-full border border-organization-gold/20">Live Sync</div>
+                    </div>
+                    <div class="overflow-x-auto flex-grow overflow-y-auto hide-scrollbar">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-black/40 border-b border-white/10 text-gray-400 uppercase tracking-[0.2em] text-[10px] font-semibold sticky top-0 backdrop-blur-md z-10">
+                                <tr>
+                                    <th class="px-8 py-5">Date & Time</th>
+                                    <th class="px-8 py-5">Event</th>
+                                    <th class="px-8 py-5">Instructor</th>
+                                    <th class="px-8 py-5">Price</th>
+                                    <th class="px-8 py-5">Cap</th>
+                                    <th class="px-8 py-5 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-tbody" class="divide-y divide-white/5 text-sm font-light">
+                                <tr><td colspan="6" class="px-8 py-12 text-center text-gray-500">Loading schedule...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers View -->
+        <div id="view-customers" class="hidden animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 space-y-4 md:space-y-0">
+                <div>
+                    <h3 class="text-3xl font-serif text-white mb-2">Customer Directory</h3>
+                    <p class="text-gray-400 text-sm font-light">Manage memberships, walk-ins, and guest profiles.</p>
+                </div>
+                <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
+                    <div class="relative w-full sm:w-auto">
+                        <svg class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" id="customer-search" placeholder="Search customers..." class="pl-11 pr-4 py-3 bg-black/40 border border-white/10 rounded-full text-white focus:border-organization-gold outline-none text-base md:text-xs transition-all font-light focus:bg-black/60 w-full sm:w-64">
+                    </div>
+                    <div class="flex flex-row gap-3 w-full sm:w-auto">
+                        <button id="add-customer-btn" class="flex-1 sm:flex-none px-4 md:px-6 py-3 rounded-full border border-organization-gold text-organization-gold uppercase tracking-[0.15em] text-[10px] md:text-xs font-semibold hover:bg-organization-gold hover:text-organization-black transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">Add Walk-in</button>
+                        <button id="export-csv-btn" class="flex-1 sm:flex-none px-4 md:px-6 py-3 rounded-full bg-organization-gold text-organization-black uppercase tracking-[0.15em] text-[10px] md:text-xs font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">Export CSV</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-black/40 border-b border-white/10 text-gray-400 uppercase tracking-[0.2em] text-[10px] font-semibold">
+                            <tr>
+                                <th class="px-8 py-5">Guest Name</th>
+                                <th class="px-8 py-5">Email Address</th>
+                                <th class="px-8 py-5">Phone</th>
+                                <th class="px-8 py-5">Bookings</th>
+                                <th class="px-8 py-5">Membership</th>
+                                <th class="px-8 py-5">Terms Status</th>
+                                <th class="px-8 py-5 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-tbody" class="divide-y divide-white/5 text-sm font-light">
+                            <tr><td colspan="7" class="px-8 py-12 text-center text-gray-500">Loading directory...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals with updated styling -->
+        
+        <!-- Customer Details Modal -->
+        <div id="customer-details-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCustomerDetailsModal()"></div>
+            <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-2xl w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in max-h-[90vh] overflow-y-auto">
+                <button onclick="closeCustomerDetailsModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20 shrink-0">
+                        <svg class="w-5 h-5 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <div class="break-all">
+                        <h3 id="cd-name" class="text-2xl font-serif text-white">Customer Details</h3>
+                        <p id="cd-email" class="text-sm text-gray-400 font-light break-words"></p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-sm mt-6">
+                    <div class="space-y-4">
+                        <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Phone</span><span id="cd-phone" class="text-white"></span></div>
+                        <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Date of Birth</span><span id="cd-dob" class="text-white"></span></div>
+                        <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Address</span><span id="cd-address" class="text-white"></span></div>
+                        <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Secondary Email</span><span id="cd-sec-email" class="text-white"></span></div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                            <span class="block text-organization-gold text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Emergency Contact</span>
+                            <div><span class="text-gray-400">Name:</span> <span id="cd-em-name" class="text-white"></span></div>
+                            <div><span class="text-gray-400">Phone:</span> <span id="cd-em-phone" class="text-white"></span></div>
+                        </div>
+                        <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Membership Expires</span><span id="cd-expires" class="text-white"></span></div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-white/10 space-y-4">
+                    <div>
+                        <span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Fitness Goals & Medical Concerns</span>
+                        <p id="cd-goals" class="text-gray-300 font-light bg-black/30 p-4 rounded-xl border border-white/5 italic"></p>
+                    </div>
+                    <div>
+                        <span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Terms Information</span>
+                        <div class="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2">
+                            <div><span class="text-gray-400">Signed At:</span> <span id="cd-terms-date" class="text-white"></span></div>
+                            <div><span class="text-gray-400">Legal Name Typed:</span> <span id="cd-terms-name" class="text-white font-script text-lg"></span></div>
+                            <div><span class="text-gray-400">Captured IP Address:</span> <span id="cd-terms-ip" class="text-white font-mono text-xs"></span></div>
+                            <div><span class="text-gray-400">Photo Release Consented:</span> <span id="cd-terms-photo" class="text-white"></span></div>
+                            <div id="cd-terms-minor-box" class="hidden"><span class="text-organization-gold font-bold">Minor Guardian Name:</span> <span id="cd-terms-minor" class="text-white"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Customer Modal -->
+        <div id="add-customer-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+            <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
+                <button id="close-customer-btn" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
+                        <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-serif text-white">Create Profile</h3>
+                </div>
+                <form id="add-customer-form" class="space-y-5">
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Full Name</label>
+                        <input type="text" id="add-customer-name" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Email Address</label>
+                        <input type="email" id="add-customer-email" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Phone (Optional)</label>
+                        <input type="tel" id="add-customer-phone" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Assign to Event (Optional)</label>
+                        <select id="add-customer-event" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                            <option value="">-- Do Not Assign --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Membership Tier / Day Pass</label>
+                        <select id="add-customer-tier" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                            <option value="A La Carte">Day Pass (A La Carte)</option>
+                            <option value="1 Month">1 Month Unlimited</option>
+                            <option value="2 Months">2 Months Unlimited</option>
+                            <option value="3 Months">3 Months Unlimited</option>
+                            <option value="Founder">Founder (Lifetime)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Expiration Date</label>
+                        <input type="date" id="add-customer-expires" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                    </div>
+                    <button type="submit" id="add-customer-save-btn" class="w-full mt-4 py-4 rounded-full bg-organization-gold text-organization-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Create Profile</button>
+                </form>
+            </div>
+        </div>
+
+
+
+        <!-- Membership Modal -->
+        <div id="membership-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+            <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
+                <button id="close-membership-btn" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
+                        <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-serif text-white">Manage Status</h3>
+                </div>
+                <p id="membership-customer-name" class="text-organization-gold text-xs uppercase tracking-[0.2em] font-semibold mb-8 ml-11"></p>
+                <form id="membership-form" class="space-y-5">
+                    <input type="hidden" id="membership-email">
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Membership Tier</label>
+                        <select id="membership-type" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                            <option value="A La Carte">A La Carte (Drop-in)</option>
+                            <option value="1 Month">1 Month Unlimited</option>
+                            <option value="2 Months">2 Months Unlimited</option>
+                            <option value="3 Months">3 Months Unlimited</option>
+                            <option value="Founder">Founder (Lifetime)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Expiration Date</label>
+                        <input type="date" id="membership-expires" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                    </div>
+                    <button type="submit" id="membership-save-btn" class="w-full mt-6 py-4 rounded-full bg-organization-gold text-organization-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-scale-in { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    </style>
+
+    <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

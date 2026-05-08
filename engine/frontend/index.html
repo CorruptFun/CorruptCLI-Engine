@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Boilerplate Service | Women's Boutique Service Organization</title>
+    <meta name="description" content="SaaS Boilerplate Service is a boutique women-only organization offering reformer and mat events. Build long, lean muscles and center your mind in a space crafted for your transformation.">
+    <meta name="keywords" content="Service, Women's Fitness, Serviceer Service, Boutique Organization, Service Events, Fitness For Women">
+    <meta name="author" content="SaaS Boilerplate">
+    <link rel="canonical" href="https://www.yourdomain.com/">
+    
+    <!-- Open Graph / SMS Preview -->
+    <meta property="og:title" content="SaaS Boilerplate Service | Women's Boutique Service Organization">
+    <meta property="og:description" content="SaaS Boilerplate service organization is designed specifically for women. Build long, lean muscles and center your mind in a space crafted for your transformation.">
+    <meta property="og:url" content="https://www.yourdomain.com/">
+    <meta property="og:image" content="https://yourdomain.com/assets/og-image.jpg">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SaaS Boilerplate Service">
+    <meta name="twitter:description" content="Boutique women-only Service organization. Join us to transform your body and mind.">
+    
+    <!-- Schema.org Markup for Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HealthAndBeautyBusiness",
+      "name": "SaaS Boilerplate Service",
+      "image": "https://yourdomain.com/assets/og-image.jpg",
+      "@id": "https://www.yourdomain.com/",
+      "url": "https://www.yourdomain.com/",
+      "telephone": "+1-000-000-0000",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "123 Main St, Suite 100",
+        "addressLocality": "Liberal",
+        "addressRegion": "KS",
+        "postalCode": "67901",
+        "addressCountry": "US"
+      },
+      "telephone": "+1-000-000-0000",
+      "description": "Boutique women-only Service organization offering reformer and mat events."
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        organization: {
+                            black: '#0a0a0a',
+                            dark: '#141414',
+                            gold: '#cba153',
+                            lightgold: '#e6c875',
+                            darkgold: '#8c6b2e'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        script: ['"Great Vibes"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0a0a; color: #f3f4f6; }
+        .text-gradient {
+            background: linear-gradient(to right, #e6c875, #cba153, #8c6b2e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #cba153 0%, #8c6b2e 100%);
+            color: #0a0a0a;
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #e6c875 0%, #cba153 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(203, 161, 83, 0.5);
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script type="module" src="js/booking.js?v=1.1"></script>
+</head>
+<body class="antialiased selection:bg-organization-gold selection:text-organization-black">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-organization-black/90 backdrop-blur-sm border-b border-organization-gold/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex items-center">
+                    <a href="/">
+                        <img src="assets/logo.png" alt="SaaS Boilerplate Logo" class="h-20 object-contain">
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-gray-300 hover:text-organization-lightgold transition font-sans text-sm uppercase tracking-widest">Organization</a>
+                    <a href="#events" class="text-gray-300 hover:text-organization-lightgold transition font-sans text-sm uppercase tracking-widest">Events</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-organization-lightgold transition font-sans text-sm uppercase tracking-widest">Pricing</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Hero background image -->
+        <div class="absolute inset-0 bg-[url('assets/hero-bg.jpg')] bg-cover bg-center bg-no-repeat -z-20"></div>
+        <!-- Gradient overlay blending into the website -->
+        <div class="absolute inset-0 bg-gradient-to-b from-organization-black/40 via-organization-black/60 to-organization-dark -z-10"></div>
+        
+        <div class="text-center px-4 max-w-4xl mx-auto mt-16">
+            <h2 class="font-script text-4xl md:text-6xl text-organization-gold mb-4">Empower Your Core</h2>
+            <h1 class="text-5xl md:text-7xl font-serif text-white mb-6 leading-tight">
+                Redefine Your <br>
+                <span class="text-gradient font-bold">Strength</span>
+            </h1>
+            <p class="text-gray-400 font-sans text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light">
+                SaaS Boilerplate service organization is designed specifically for women. Build long, lean muscles and center your mind in a space crafted for your transformation.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#book" class="btn-gold px-8 py-4 rounded-full font-sans font-semibold uppercase tracking-widest text-sm">View Schedule</a>
+                <a href="#about" class="px-8 py-4 rounded-full font-sans font-semibold uppercase tracking-widest text-sm border border-organization-gold text-organization-gold hover:bg-organization-gold/10 transition">Our Philosophy</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-organization-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h3 class="text-organization-gold font-sans uppercase tracking-widest text-sm mb-2">Welcome to the Organization</h3>
+                    <h2 class="text-4xl md:text-5xl font-serif text-white mb-6">More Than Just a Workout.</h2>
+                    <p class="text-gray-400 font-sans mb-6 leading-relaxed font-light">
+                        At SaaS Boilerplate, we believe in the power of movement to heal, strengthen, and empower. Our state-of-the-art reformers and expertly crafted routines are designed to meet you where you are and push you to where you want to be.
+                    </p>
+                    <p class="text-gray-400 font-sans mb-8 leading-relaxed font-light">
+                        Whether you are recovering from an injury, looking to tone and sculpt, or simply seeking an hour of mindful movement, our intimate event sizes ensure you get the personalized attention you deserve.
+                    </p>
+                    <img src="assets/logo.png" alt="SaaS Boilerplate Accent" class="h-24 opacity-80 mix-blend-screen">
+                </div>
+                <div class="relative">
+                    <div class="aspect-[4/5] rounded-t-full overflow-hidden border border-organization-gold/30 p-2">
+                        <div class="w-full h-full rounded-t-full overflow-hidden relative">
+                            <video 
+                                id="parallax-video"
+                                src="assets/reformer-scroll.mp4" 
+                                playsinline autoplay muted loop 
+                                class="absolute top-[-15%] left-0 w-full h-[130%] object-cover object-[85%_0%] scale-[1.35] origin-[85%_15%] grayscale hover:grayscale-0 transition-[filter] duration-700"
+                            ></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-organization-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-organization-gold font-sans uppercase tracking-widest text-sm mb-2">Investment</h3>
+                <h2 class="text-4xl md:text-5xl font-serif text-white">Membership Options</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Drop In -->
+                <div class="border border-organization-gold/20 p-8 rounded-2xl text-center flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-xl font-serif text-white mb-2">A La Carte</h4>
+                        <div class="space-y-4 mt-6 mb-8 text-left max-w-[220px] mx-auto">
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">Group (60 min)</span>
+                                <span class="text-organization-gold font-semibold">$30</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">Express (30 min)</span>
+                                <span class="text-organization-gold font-semibold">$25</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">1-on-1 Session</span>
+                                <span class="text-organization-gold font-semibold">$50</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <button onclick="window.location.href='#book'" class="w-full py-3 rounded-full font-sans text-sm uppercase tracking-widest border border-organization-gold text-organization-gold hover:bg-organization-gold/10 transition text-center block">Book Session</button>
+                </div>
+
+                <!-- Monthly Unlimited -->
+                <div class="border border-organization-gold p-8 rounded-2xl text-center bg-organization-black relative shadow-[0_0_30px_rgba(203,161,83,0.15)] flex flex-col justify-between transform md:-translate-y-4">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-organization-gold text-organization-black text-xs uppercase tracking-widest px-4 py-1 rounded-full font-bold">Most Popular</div>
+                    <div>
+                        <h4 class="text-xl font-serif text-white mb-2">1 Month Unlimited</h4>
+                        <div class="text-4xl font-sans text-organization-gold font-medium mb-2 mt-4">$460<span class="text-lg text-gray-500 font-light">/mo</span></div>
+                        <p class="text-xs text-organization-lightgold mb-6 font-sans bg-organization-gold/10 inline-block px-3 py-1 rounded-full border border-organization-gold/30">First 5 members: $200</p>
+                        <ul class="text-gray-400 font-sans text-sm space-y-3 mb-8 text-left max-w-[200px] mx-auto">
+                            <li class="flex items-start"><span class="text-organization-gold mr-2 mt-0.5">✓</span> Unlimited group events</li>
+                            <li class="flex items-start"><span class="text-organization-gold mr-2 mt-0.5">✓</span> Priority booking</li>
+                            <li class="flex items-start"><span class="text-organization-gold mr-2 mt-0.5">✓</span> 30 days of access</li>
+                        </ul>
+                    </div>
+                    <button onclick="openMembershipCheckoutModal()" class="w-full btn-gold py-3 rounded-full font-sans text-sm uppercase tracking-widest font-semibold text-organization-black text-center block">Join Now</button>
+                </div>
+
+                <!-- 3-Month Unlimited -->
+                <div class="border border-organization-gold/20 p-8 rounded-2xl text-center flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-xl font-serif text-white mb-2">Event Experiences</h4>
+                        <div class="text-xs text-organization-lightgold mb-6 font-sans bg-organization-gold/10 inline-block px-3 py-1 rounded-full border border-organization-gold/30">Valid for 30 Days</div>
+                        <div class="space-y-4 mb-8 text-left max-w-[220px] mx-auto">
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">4 Events</span>
+                                <span class="text-organization-gold font-semibold">$115</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">6 Events</span>
+                                <span class="text-organization-gold font-semibold">$165</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">8 Events</span>
+                                <span class="text-organization-gold font-semibold">$225</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="text-gray-300 font-sans text-sm">12 Events</span>
+                                <span class="text-organization-gold font-semibold">$345</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openMembershipCheckoutModal()" class="w-full py-3 rounded-full font-sans text-sm uppercase tracking-widest border border-organization-gold text-organization-gold hover:bg-organization-gold/10 transition text-center block">Buy Pack</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="py-24 bg-organization-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative text-center mb-16 py-16 overflow-hidden rounded-lg border border-organization-gold/10">
+                <!-- Clean video with only blur applied -->
+                <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-[3px]">
+                    <source src="assets/events-bg.mp4" type="video/mp4">
+                </video>
+                
+                                <div class="relative z-10 inline-block bg-organization-black/40 backdrop-blur-md px-10 py-6 rounded-xl border border-organization-gold/10 shadow-2xl">
+                    <h3 class="text-organization-gold font-sans uppercase tracking-widest text-sm mb-2 drop-shadow-md">Our Offerings</h3>
+                    <h2 class="text-4xl md:text-5xl font-serif text-white drop-shadow-xl font-bold">Signature Events</h2>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Event 1 -->
+                <div class="group border border-organization-gold/20 bg-organization-dark p-6 rounded-2xl hover:border-organization-gold/60 transition duration-500">
+                    <h4 class="text-xl font-serif text-white mb-3 group-hover:text-organization-lightgold transition">Group Events</h4>
+                    <p class="text-gray-400 font-sans text-sm mb-6 leading-relaxed font-light">
+                        Dynamic, full-body group workouts designed to tone, lengthen, and challenge your endurance.
+                    </p>
+                    <span class="text-organization-gold font-sans text-xs uppercase tracking-widest border-b border-organization-gold pb-1">60 Minutes</span>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="group border border-organization-gold/20 bg-organization-dark p-6 rounded-2xl hover:border-organization-gold/60 transition duration-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-organization-gold text-organization-black text-[10px] uppercase tracking-widest px-3 py-1 font-bold rounded-bl-lg">Express</div>
+                    <h4 class="text-xl font-serif text-white mb-3 group-hover:text-organization-lightgold transition">Express Sessions</h4>
+                    <p class="text-gray-400 font-sans text-sm mb-6 leading-relaxed font-light">
+                        Short on time? Get a high-impact, focused workout that fits perfectly into your busy schedule.
+                    </p>
+                    <span class="text-organization-gold font-sans text-xs uppercase tracking-widest border-b border-organization-gold pb-1">30 Minutes</span>
+                </div>
+
+                <!-- Event 4 -->
+                <div class="group border border-organization-gold/20 bg-organization-dark p-6 rounded-2xl hover:border-organization-gold/60 transition duration-500">
+                    <h4 class="text-xl font-serif text-white mb-3 group-hover:text-organization-lightgold transition">1-on-1 Individual</h4>
+                    <p class="text-gray-400 font-sans text-sm mb-6 leading-relaxed font-light">
+                        Personalized instruction tailored exactly to your body's needs, goals, and experience level.
+                    </p>
+                    <span class="text-organization-gold font-sans text-xs uppercase tracking-widest border-b border-organization-gold pb-1">30 or 60 Minutes</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section (Acuity Integration) -->
+    <section id="book" class="py-24 bg-organization-black border-t border-organization-gold/10">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            
+            <div class="relative text-center mb-16 py-16 overflow-hidden rounded-lg border border-organization-gold/10">
+                <!-- Clean video with only blur applied -->
+                <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover blur-[3px]">
+                    <source src="assets/schedule-bg.mp4" type="video/mp4">
+                </video>
+                
+                <div class="relative z-10 inline-block bg-organization-black/40 backdrop-blur-md px-10 py-6 rounded-xl border border-organization-gold/10 shadow-2xl">
+                    <h3 class="text-organization-gold font-sans uppercase tracking-widest text-sm mb-2 drop-shadow-md">Reserve Your Spot</h3>
+                    <h2 class="text-4xl md:text-5xl font-serif text-white drop-shadow-xl font-bold">Event Schedule</h2>
+                </div>
+            </div>
+            
+            
+            
+            <!-- Calendar View -->
+            <div id="calendar-container" class="max-w-4xl mx-auto mb-8 overflow-x-auto hide-scrollbar pb-4">
+                <div id="calendar-days" class="flex space-x-3 min-w-max">
+                    <!-- JS will inject days here -->
+                </div>
+            </div>
+
+            <!-- Dynamic Schedule Container -->
+
+            <div id="schedule-container" class="space-y-4 max-w-4xl mx-auto">
+                <!-- JS will inject event cards here -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Waitlist / Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-organization-black border border-organization-gold/20 p-8 rounded-2xl max-w-lg w-full relative shadow-2xl">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="profile-header-text">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-2xl font-serif text-white text-center flex-grow">Complete Your Profile</h3>
+                </div>
+                <p class="text-gray-400 font-sans text-sm mb-6 text-center">Please provide your details to join the waitlist and create your SaaS Boilerplate account.</p>
+            </div>
+            
+            <form id="profile-form" class="space-y-4">
+                <div>
+                    <div class="flex justify-between items-end mb-1">
+                        <label class="block text-gray-400 text-sm font-sans text-left uppercase tracking-widest text-xs">Email Address</label>
+                        <button type="button" onclick="clearSavedUser()" class="text-organization-gold text-xs hover:text-white transition-colors font-sans uppercase tracking-widest hidden" id="clear-profile-btn">Not You? Clear Info</button>
+                    </div>
+                    <input type="email" id="profile-email" readonly class="w-full bg-organization-dark/50 border border-organization-gold/10 rounded-xl px-4 py-3 text-gray-500 cursor-not-allowed font-sans md:text-sm text-base">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm font-sans mb-1 text-left uppercase tracking-widest text-xs">Full Name</label>
+                    <input type="text" id="profile-name" required class="w-full bg-organization-dark border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans md:text-sm text-base transition-colors">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-400 text-sm font-sans mb-1 text-left uppercase tracking-widest text-xs">Phone Number</label>
+                        <input type="tel" id="profile-phone" required class="w-full bg-organization-dark border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans md:text-sm text-base transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm font-sans mb-1 text-left uppercase tracking-widest text-xs">Sex</label>
+                        <select id="profile-sex" required class="w-full bg-organization-dark border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans md:text-sm text-base transition-colors appearance-none">
+                            <option value="" disabled selected>Select...</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm font-sans mb-1 text-left uppercase tracking-widest text-xs">Address</label>
+                    <input type="text" id="profile-address" required placeholder="Street, City, State, Zip" class="w-full bg-organization-dark border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans md:text-sm text-base transition-colors">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm font-sans mb-1 text-left uppercase tracking-widest text-xs">About You (Goals & Medical)</label>
+                    <textarea id="profile-goals" rows="3" placeholder="What are your goals? Any medical conditions, medications, or injuries we should know about?" class="w-full bg-organization-dark border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans md:text-sm text-base transition-colors resize-none"></textarea>
+                </div>
+                <button type="submit" id="profile-submit-btn" class="w-full mt-6 px-8 py-4 rounded-full bg-organization-gold text-organization-black font-sans uppercase tracking-widest text-sm font-medium hover:bg-white transition-colors duration-300 shadow-lg">
+                    Create Profile
+                </button>
+            </form>
+            
+            <div id="profile-success-msg" class="hidden text-center py-6">
+                <svg class="w-16 h-16 text-organization-gold mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <h4 class="text-2xl font-serif text-white mb-2">Welcome!</h4>
+                <p class="text-gray-400 font-sans">Your profile has been created and you're officially on the waitlist.</p>
+                <button onclick="closeProfileModal()" class="mt-6 px-8 py-3 rounded-full border border-organization-gold text-organization-gold font-sans uppercase tracking-widest text-sm hover:bg-organization-gold hover:text-organization-black transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Membership Checkout Modal -->
+    <div id="membership-checkout-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-[#111] border border-organization-gold/20 p-10 rounded-3xl max-w-md w-full relative shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <button onclick="closeMembershipCheckoutModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
+                    <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-serif text-white">Join SaaS Boilerplate</h3>
+            </div>
+            
+            <form id="membership-checkout-form" class="space-y-5" onsubmit="submitMembershipCheckout(event)">
+                <div>
+                    <label class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Full Name</label>
+                    <input type="text" id="mem-checkout-name" required class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-organization-gold font-light transition-all">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Email Address</label>
+                    <input type="email" id="mem-checkout-email" required class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-organization-gold font-light transition-all">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Select Plan</label>
+                    <select id="mem-checkout-tier" required class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-organization-gold font-light transition-all appearance-none cursor-pointer">
+                        <option value="4 Event Experience">4 Event Experience — $115</option>
+                        <option value="6 Event Experience">6 Event Experience — $165</option>
+                        <option value="8 Event Experience">8 Event Experience — $225</option>
+                        <option value="12 Event Experience">12 Event Experience — $345</option>
+                        <option value="1 Month Unlimited">1 Month Unlimited — $460</option>
+                        <option value="3 Months Unlimited">3 Months Unlimited — $600</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Preferred Daily Schedule</label>
+                    <select id="mem-checkout-time" class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-organization-gold font-light transition-all appearance-none cursor-pointer">
+                        <option value="">I will book events manually via calendar</option>
+                        <option value="06:00">6:00 AM (Morning Flow)</option>
+                        <option value="07:20">7:20 AM (Morning Flow)</option>
+                        <option value="08:00">8:00 AM (Morning Flow)</option>
+                        <option value="08:30">8:30 AM (Morning Flow)</option>
+                        <option value="09:15">9:15 AM (Morning Flow)</option>
+                        <option value="12:30">12:30 PM (Lunch Express)</option>
+                        <option value="16:00">4:00 PM (Evening Sculpt)</option>
+                        <option value="17:00">5:00 PM (Evening Sculpt)</option>
+                        <option value="17:15">5:15 PM (Evening Sculpt)</option>
+                        <option value="18:15">6:15 PM (Evening Sculpt)</option>
+                        <option value="19:30">7:30 PM (Evening Sculpt)</option>
+                    </select>
+                    <p class="text-[10px] text-gray-500 mt-2 font-light">Event Experience packs should be scheduled manually on the event calendar after purchase.</p>
+                </div>
+                <button type="submit" id="submit-mem-btn" class="w-full mt-6 px-8 py-4 bg-organization-gold rounded-full text-organization-black font-sans uppercase tracking-[0.2em] text-xs font-bold hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                    Secure Checkout
+                </button>
+            </form>
+        </div>
+    </div>
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-organization-dark border border-organization-gold/20 p-8 rounded-2xl max-w-md w-full relative shadow-2xl">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 class="text-2xl font-serif text-white mb-2">Complete Reservation</h3>
+            <p id="modal-event-title" class="text-organization-gold font-sans text-sm mb-6 uppercase tracking-wider"></p>
+            
+            <div id="booking-warning" class="hidden mb-6 bg-red-900/30 border border-red-500/50 text-red-200 text-xs p-4 rounded-lg font-sans leading-relaxed text-left">
+                ⚠️ <strong class="text-red-400">Heads up!</strong> This event starts in less than 24 hours. By booking this spot, you acknowledge that it falls inside our 24-hour cancellation window and cannot be canceled or refunded.
+            </div>
+
+            <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                <input type="hidden" id="modal-event-id">
+                <div>
+                    <div class="flex justify-between items-end mb-1">
+                        <label class="block text-gray-400 text-sm font-sans text-left">Full Name</label>
+                        <button type="button" onclick="clearSavedUser()" class="text-organization-gold text-xs hover:text-white transition-colors font-sans uppercase tracking-widest hidden" id="clear-booking-btn">Not You? Clear Info</button>
+                    </div>
+                    <input type="text" id="booking-name" required class="w-full bg-organization-black border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans transition-colors">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm font-sans mb-1 text-left">Email Address</label>
+                    <input type="email" id="booking-email" required class="w-full bg-organization-black border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans transition-colors">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm font-sans mb-1 text-left">Payment Method</label>
+                    <select id="booking-payment" class="w-full bg-organization-black border border-organization-gold/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-organization-gold font-sans transition-colors">
+                        <option value="credits">Use Event Experience Pack (Credits)</option>
+                        <option value="stripe">Pay Drop-in ($30 Online)</option>
+                    </select>
+                </div>
+                <button type="submit" id="submit-booking-btn" class="w-full mt-4 px-8 py-4 rounded-full bg-organization-gold text-organization-black font-sans uppercase tracking-widest text-sm font-medium hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                    Confirm Booking
+                </button>
+                <p class="text-xs text-gray-500 font-sans text-center mt-4">
+                    By booking, you agree to our <strong>24-hour cancellation policy</strong>.<br/>Cancellations within 24 hours of the event will be charged the full amount.
+                </p>
+            </form>
+            
+            <div id="booking-success-msg" class="hidden text-center py-8">
+                <svg class="w-16 h-16 text-organization-gold mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <h4 class="text-2xl font-serif text-white mb-2">You're In!</h4>
+                <p class="text-gray-400 font-sans">Your spot has been reserved. Check your email for confirmation details.</p>
+                <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 rounded-full border border-organization-gold text-organization-gold font-sans uppercase tracking-widest text-sm hover:bg-organization-gold hover:text-organization-black transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Memberships Section -->
+    <section id="memberships" class="py-24 bg-organization-dark relative border-t border-organization-gold/10 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-organization-gold/5 via-transparent to-transparent"></div>
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h3 class="text-organization-gold font-sans uppercase tracking-widest text-sm mb-2">Elevate Your Practice</h3>
+            <h2 class="text-4xl md:text-5xl font-serif text-white mb-6">Membership Options</h2>
+            <p class="text-gray-300 font-sans font-light text-lg mb-10 max-w-xl mx-auto">
+                Secure your spot on the reformer with our unlimited monthly tiers or an exclusive lifetime Founder membership.
+            </p>
+            <button onclick="openMembershipCheckoutModal()" 
+                class="bg-organization-gold text-organization-black px-10 py-4 rounded-full font-sans tracking-widest uppercase text-sm font-semibold hover:bg-white transition-colors duration-300 shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                View Plans & Purchase
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-organization-black border-t border-organization-gold/20 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <img src="assets/logo.png" alt="SaaS Boilerplate Logo" class="h-16 object-contain mb-4 mx-auto md:mx-0">
+                <p class="text-gray-500 font-sans text-sm font-light">© 2026 SaaS Boilerplate Service. All rights reserved.</p>
+            </div>
+            <div class="flex space-x-6 text-sm font-sans uppercase tracking-widest text-gray-400 items-center">
+                <a href="https://www.instagram.com/yourdomain.com" target="_blank" rel="noopener noreferrer" class="hover:text-organization-gold transition" aria-label="Instagram">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="https://www.facebook.com/people/ServiceHer-Service/61580673279828/" target="_blank" rel="noopener noreferrer" class="hover:text-organization-gold transition" aria-label="Facebook">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="mailto:admin@example.com" class="hover:text-organization-gold transition">Contact</a>
+                <a href="/terms.html" class="hover:text-organization-gold transition">Terms & Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Parallax Script for Video -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const video = document.getElementById("parallax-video");
+            
+            // Listen for scroll events to apply parallax effect
+            window.addEventListener("scroll", () => {
+                if (!video) return;
+                
+                // Get the bounding box of the video container relative to the viewport
+                const rect = video.parentElement.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                // Only animate if the container is visible in the viewport
+                if (rect.top <= windowHeight && rect.bottom >= 0) {
+                    // Calculate scroll percentage through the element's visibility window
+                    // When rect.top === windowHeight, progress is 0
+                    // When rect.bottom === 0, progress is 1
+                    const progress = 1 - (rect.bottom / (windowHeight + rect.height));
+                    
+                    // We made the video 130% height and top-[-15%] initially. 
+                    // Let's translate it based on scroll to create the parallax.
+                    // Max translation should keep it within the bounds of its 130% height.
+                    const yOffset = (progress * 20) - 5; // Maps progress to focus higher up on the torso
+                    
+                    video.style.transform = `translateY(${yOffset}%)`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
