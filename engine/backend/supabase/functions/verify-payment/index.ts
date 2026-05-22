@@ -26,11 +26,30 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
     if (session.payment_status === 'paid') {
-      // Update booking to paid
       const supabaseAdmin = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       );
+
+      // Validate that the booking_id matches what Stripe has in metadata
+      const metaBookingId = session.metadata?.booking_id;
+      if (metaBookingId && metaBookingId !== booking_id) {
+        throw new Error("Booking ID does not match payment session.");
+      }
+
+      // Idempotency: check if already processed
+      const { data: existing } = await supabaseAdmin
+        .from('bookings')
+        .select('payment_status')
+        .eq('id', booking_id)
+        .maybeSingle();
+
+      if (existing?.payment_status === 'paid') {
+        return new Response(JSON.stringify({ status: 'success', message: 'Already processed' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        });
+      }
 
       const { error } = await supabaseAdmin
         .from('bookings')

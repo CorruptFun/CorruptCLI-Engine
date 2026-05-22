@@ -1,13 +1,14 @@
 ## Description
-Describe the changes or features added to the engine.
+Brief description of changes.
 
 ## Type of Change
 - [ ] Bug fix
 - [ ] New feature
-- [ ] Enhancement (performance/UI)
 - [ ] Breaking change
+- [ ] Documentation update
 
 ## Checklist
-- [ ] Code follows the Corrupt Engine style guide.
-- [ ] Local validation script passed.
-- [ ] Changes documented in README.
+- [ ] No hardcoded PII or secrets
+- [ ] All `{{TOKENS}}` are properly templated
+- [ ] Edge functions tested locally
+- [ ] RLS policies verified

@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Boilerplate | Admin Dashboard</title>
+    <title>{{CLIENT_NAME}} | Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        organization: { gold: '#D4AF37', lightgold: '#F3E5AB', dark: '#111111', black: '#000000' }
+                        studio: { gold: '#D4AF37', lightgold: '#F3E5AB', dark: '#111111', black: '#000000' }
                     },
                     fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] }
                 }
@@ -21,15 +21,15 @@
 <body class="bg-[#0a0a0a] text-white font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden">
     <!-- Ambient Background Glow -->
     <div class="fixed inset-0 pointer-events-none z-0">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-organization-gold/10 blur-[120px] rounded-full"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-organization-gold/5 blur-[120px] rounded-full"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-studio-gold/10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-studio-gold/5 blur-[120px] rounded-full"></div>
     </div>
 
     <!-- Navbar -->
     <nav class="border-b border-white/5 bg-black/50 backdrop-blur-md py-5 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
-            <h1 class="text-2xl font-serif text-white tracking-wide"><span class="text-organization-gold">SaaS Boilerplate</span> Admin</h1>
-            <button id="logout-btn" class="hidden text-xs text-gray-400 hover:text-organization-gold uppercase tracking-[0.2em] transition-colors duration-300">Logout</button>
+            <h1 class="text-2xl font-serif text-white tracking-wide"><span class="text-studio-gold">{{CLIENT_NAME}}</span> Admin</h1>
+            <button id="logout-btn" class="hidden text-xs text-gray-400 hover:text-studio-gold uppercase tracking-[0.2em] transition-colors duration-300">Logout</button>
         </div>
     </nav>
 
@@ -37,68 +37,92 @@
     <div id="login-screen" class="flex-grow flex items-center justify-center p-6 relative z-10">
         <div class="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             <div class="flex justify-center mb-6">
-                <div class="w-12 h-12 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
-                    <svg class="w-6 h-6 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <div class="w-12 h-12 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20">
+                    <svg class="w-6 h-6 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>
             </div>
             <h2 class="text-3xl font-serif text-white mb-2 text-center">Secure Access</h2>
-            <p class="text-gray-400 text-sm mb-8 text-center font-light">Enter the master admin email to receive a passwordless login link.</p>
+            <p class="text-gray-400 text-sm mb-8 text-center font-light">Enter the master admin email to receive a one-time access code.</p>
             <form id="login-form" class="space-y-5">
                 <div>
-                    <input type="email" id="login-email" placeholder="admin@example.com" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-organization-gold focus:bg-white/10 outline-none transition-all duration-300 font-light placeholder-gray-500">
+                    <input type="email" id="login-email" placeholder="{{ADMIN_EMAIL}}" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:border-studio-gold focus:bg-white/10 outline-none transition-all duration-300 font-light placeholder-gray-500">
                 </div>
                 <div class="flex items-center space-x-3 mb-4">
                     <div class="relative flex items-center justify-center">
-                        <input type="checkbox" id="login-remember" checked class="peer appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-organization-gold checked:border-organization-gold transition-all cursor-pointer">
-                        <svg class="absolute w-3 h-3 text-organization-black pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        <input type="checkbox" id="login-remember" checked class="peer appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-studio-gold checked:border-studio-gold transition-all cursor-pointer">
+                        <svg class="absolute w-3 h-3 text-studio-black pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                     <label for="login-remember" class="text-sm text-gray-400 font-light cursor-pointer select-none hover:text-white transition-colors">Remember this device for 30 days</label>
                 </div>
-                <button type="submit" id="login-btn" class="w-full py-4 bg-organization-gold rounded-full text-organization-black text-sm font-semibold tracking-[0.2em] uppercase hover:bg-white transition-colors shadow-[0_0_20px_rgba(212,175,55,0.3)]">Send Magic Link</button>
+                <button type="submit" id="login-btn" class="w-full py-4 bg-studio-gold rounded-full text-studio-black text-sm font-semibold tracking-[0.2em] uppercase hover:bg-white transition-colors shadow-[0_0_20px_rgba(212,175,55,0.3)]">Send Access Code</button>
             </form>
             <p id="login-error" class="text-red-400 text-sm mt-5 text-center hidden font-light bg-red-400/10 py-2 rounded-lg"></p>
-            <p id="login-success" class="text-green-400 text-sm mt-5 text-center hidden font-light bg-green-400/10 py-2 rounded-lg border border-green-400/20">Check your inbox! A secure magic link has been sent.</p>
+            <p id="login-success" class="text-green-400 text-sm mt-5 text-center hidden font-light bg-green-400/10 py-2 rounded-lg border border-green-400/20">Check your inbox! A 6-digit code has been sent.</p>
         </div>
     </div>
 
-    <!-- Waiting Screen -->
+    <!-- OTP Verification Screen -->
     <div id="waiting-screen" class="hidden flex-grow flex items-center justify-center p-6 relative z-10">
         <div class="bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] text-center">
             <div class="flex justify-center mb-8">
-                <div class="relative">
-                    <div class="w-20 h-20 rounded-full border-2 border-organization-gold/20 border-t-organization-gold animate-spin"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    </div>
+                <div class="w-20 h-20 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20">
+                    <svg class="w-8 h-8 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>
             </div>
-            <h2 class="text-3xl font-serif text-white mb-4">Check Your Email</h2>
+            <h2 class="text-3xl font-serif text-white mb-4">Enter Access Code</h2>
             <p class="text-gray-400 text-sm mb-8 font-light leading-relaxed">
-                A secure login link has been sent to <span id="display-email" class="text-white font-medium"></span>.<br><br>
-                Please click the link in your email to verify your session. This page will automatically refresh once you're authenticated.
+                A 6-digit code was sent to <span id="display-email" class="text-white font-medium"></span>.
             </p>
-            <button onclick="window.location.reload()" class="text-xs text-gray-500 hover:text-organization-gold uppercase tracking-[0.2em] transition-colors">Didn't get it? Try again</button>
+            <form id="otp-form" class="space-y-5">
+                <input type="text" id="otp-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code" class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-5 text-white text-center text-3xl font-mono tracking-[0.5em] focus:border-studio-gold focus:bg-white/10 outline-none transition-all placeholder-gray-600">
+                <button type="submit" id="otp-btn" class="w-full py-4 bg-studio-gold rounded-full text-studio-black text-sm font-semibold tracking-[0.2em] uppercase hover:bg-white transition-colors shadow-[0_0_20px_rgba(212,175,55,0.3)]">Verify Code</button>
+            </form>
+            <p id="otp-error" class="text-red-400 text-sm mt-5 text-center hidden font-light bg-red-400/10 py-2 rounded-lg"></p>
+            <div class="mt-6 flex justify-center gap-6">
+                <button onclick="window.location.reload()" class="text-xs text-gray-500 hover:text-studio-gold uppercase tracking-[0.2em] transition-colors">Start Over</button>
+                <button id="resend-otp-btn" class="text-xs text-gray-500 hover:text-studio-gold uppercase tracking-[0.2em] transition-colors">Resend Code</button>
+            </div>
         </div>
     </div>
 
     <!-- Dashboard Screen -->
     <div id="dashboard-screen" class="hidden flex-grow max-w-7xl mx-auto w-full px-6 lg:px-8 py-12 relative z-10">
         
+        <!-- Dashboard Stats Bar -->
+        <div id="stats-bar" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md">
+                <div class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Today's Classes</div>
+                <div id="stat-today-classes" class="text-2xl font-serif text-white">—</div>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md">
+                <div class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Active Members</div>
+                <div id="stat-active-members" class="text-2xl font-serif text-studio-gold">—</div>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md">
+                <div class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Expiring This Week</div>
+                <div id="stat-expiring" class="text-2xl font-serif text-amber-400">—</div>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-md">
+                <div class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Unsigned Waivers</div>
+                <div id="stat-unsigned-waivers" class="text-2xl font-serif text-red-400">—</div>
+            </div>
+        </div>
+
         <!-- Tabs -->
-        <div class="flex space-x-8 border-b border-white/10 mb-10 overflow-x-auto hide-scrollbar">
-            <button id="tab-events" class="pb-4 px-2 whitespace-nowrap text-organization-gold border-b-2 border-organization-gold uppercase tracking-[0.15em] text-xs font-semibold transition-colors duration-300">Events & Rosters</button>
+        <div class="flex space-x-4 md:space-x-8 border-b border-white/10 mb-10 overflow-x-auto hide-scrollbar">
+            <button id="tab-classes" class="pb-4 px-2 whitespace-nowrap text-studio-gold border-b-2 border-studio-gold uppercase tracking-[0.15em] text-xs font-semibold transition-colors duration-300">Classes & Rosters</button>
             <button id="tab-manage" class="pb-4 px-2 whitespace-nowrap text-gray-500 hover:text-white uppercase tracking-[0.15em] text-xs font-medium transition-colors duration-300">Manage Schedule</button>
             <button id="tab-customers" class="pb-4 px-2 whitespace-nowrap text-gray-500 hover:text-white uppercase tracking-[0.15em] text-xs font-medium transition-colors duration-300">Customer List</button>
         </div>
 
-        <!-- Events View -->
-        <div id="view-events" class="animate-fade-in">
+        <!-- Classes View -->
+        <div id="view-classes" class="animate-fade-in">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8">
                 <div class="md:col-span-4 bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-md">
                     <div class="flex justify-between items-center mb-6">
-                        <button id="admin-calendar-prev" class="w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-gray-400 hover:text-white hover:bg-organization-gold/20 transition border border-white/10">&larr;</button>
+                        <button id="admin-calendar-prev" class="w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-gray-400 hover:text-white hover:bg-studio-gold/20 transition border border-white/10">&larr;</button>
                         <div id="admin-calendar-month-label" class="text-white font-serif uppercase tracking-widest text-sm font-semibold"></div>
-                        <button id="admin-calendar-next" class="w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-gray-400 hover:text-white hover:bg-organization-gold/20 transition border border-white/10">&rarr;</button>
+                        <button id="admin-calendar-next" class="w-8 h-8 flex items-center justify-center rounded-full bg-black/40 text-gray-400 hover:text-white hover:bg-studio-gold/20 transition border border-white/10">&rarr;</button>
                     </div>
                     <div class="grid grid-cols-7 gap-1 text-center mb-2">
                         <div class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Su</div>
@@ -114,11 +138,15 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-8 bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-md flex flex-col">
-                    <label class="block text-gray-500 text-xs mb-4 uppercase tracking-[0.2em] font-medium border-b border-white/10 pb-4">Events on Selected Date</label>
-                    <div class="flex flex-wrap gap-3 flex-grow content-start" id="admin-event-pills">
-                        <div class="text-gray-500 text-sm py-2">Select a date to view events.</div>
+                <div class="md:col-span-8 bg-white/5 border border-white/10 rounded-3xl p-6 shadow-2xl backdrop-blur-md flex flex-col relative">
+                    <label class="block text-gray-500 text-xs mb-4 uppercase tracking-[0.2em] font-medium border-b border-white/10 pb-4">Classes on Selected Date</label>
+                    <div class="flex flex-wrap gap-3 flex-grow content-start" id="admin-class-pills">
+                        <div class="text-gray-500 text-sm py-2">Select a date to view classes.</div>
                     </div>
+                    <!-- Add Private Session Button -->
+                    <button onclick="openPrivateClassModal()" class="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-studio-gold text-studio-black hover:bg-white transition-all shadow-lg z-20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    </button>
                 </div>
             </div>
 
@@ -127,15 +155,16 @@
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-black/40 border-b border-white/10 text-gray-400 uppercase tracking-[0.2em] text-[10px] font-semibold">
                             <tr>
-                                <th class="px-8 py-5">Guest Name</th>
-                                <th class="px-8 py-5">Email Address</th>
-                                <th class="px-8 py-5">Payment Method</th>
-                                <th class="px-8 py-5">Status</th>
-                                <th class="px-8 py-5 text-right">Actions</th>
+                                <th class="px-3 md:px-6 py-5 w-12 md:w-16">Check-In</th>
+                                <th class="px-3 md:px-8 py-5">Guest Name</th>
+                                <th class="hidden md:table-cell px-8 py-5">Email Address</th>
+                                <th class="px-3 md:px-8 py-5">Payment</th>
+                                <th class="px-3 md:px-8 py-5">Status</th>
+                                <th class="px-3 md:px-8 py-5 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="roster-tbody" class="divide-y divide-white/5 text-sm font-light">
-                            <tr><td colspan="5" class="px-8 py-12 text-center text-gray-500">Select a event to view the roster</td></tr>
+                            <tr><td colspan="6" class="px-8 py-12 text-center text-gray-500">Select a class to view the roster</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -148,44 +177,59 @@
                 <!-- Form -->
                 <div class="lg:col-span-4 bg-white/5 border border-white/10 rounded-3xl p-8 self-start shadow-2xl backdrop-blur-md">
                     <div class="flex items-center space-x-3 mb-8">
-                        <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
-                            <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <div class="w-8 h-8 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20">
+                            <svg class="w-4 h-4 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                         </div>
-                        <h3 id="manage-form-title" class="text-2xl font-serif text-white">Add New Event</h3>
+                        <h3 id="manage-form-title" class="text-2xl font-serif text-white">Add New Class</h3>
                     </div>
                     
-                    <form id="event-form" class="space-y-5">
+                    <form id="class-form" class="space-y-5">
                         <input type="hidden" id="manage-id">
                         <div>
-                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Event Title</label>
-                            <input type="text" id="manage-title" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Visibility</label>
+                            <select id="manage-visibility" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                                <option value="public" selected>Group (Public)</option>
+                                <option value="private">1:1 (Private)</option>
+                            </select>
+                        </div>
+                        <div id="private-customer-selection" class="hidden animate-fade-in">
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Assign Customer</label>
+                            <div class="relative">
+                                <input type="text" id="private-customer-search" placeholder="Search by name or email..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                                <div id="customer-search-results" class="absolute left-0 right-0 top-full mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl z-50 max-h-48 overflow-y-auto hidden"></div>
+                                <input type="hidden" id="assigned-customer-email">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Class Title</label>
+                            <input type="text" id="manage-title" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
                         </div>
                         <div>
                             <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Instructor</label>
-                            <input type="text" id="manage-instructor" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                            <input type="text" id="manage-instructor" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
                         </div>
                         <div class="grid grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Price ($)</label>
-                                <input type="number" id="manage-price" value="30" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                                <input type="number" id="manage-price" value="30" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
                             </div>
                             <div>
                                 <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Capacity</label>
-                                <input type="number" id="manage-capacity" value="6" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                                <input type="number" id="manage-capacity" value="6" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
                             </div>
                         </div>
                         <div>
                             <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Date</label>
-                            <input type="date" id="manage-date" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                            <input type="date" id="manage-date" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
                         </div>
                         <div class="grid grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Start Time</label>
-                                <input type="time" id="manage-time" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                                <input type="time" id="manage-time" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
                             </div>
                             <div>
                                 <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Duration</label>
-                                <select id="manage-duration" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                                <select id="manage-duration" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
                                     <option value="30">30 Min</option>
                                     <option value="45">45 Min</option>
                                     <option value="50">50 Min</option>
@@ -196,14 +240,14 @@
                         <div id="recurring-group" class="pt-6 border-t border-white/10 mt-6">
                             <label class="flex items-center space-x-3 text-sm text-gray-300 cursor-pointer group">
                                 <div class="relative flex items-center justify-center">
-                                    <input type="checkbox" id="manage-recurring" class="peer appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-organization-gold checked:border-organization-gold transition-all" onchange="document.getElementById('recurring-weeks-group').classList.toggle('hidden')">
-                                    <svg class="absolute w-3 h-3 text-organization-black pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    <input type="checkbox" id="manage-recurring" class="peer appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-studio-gold checked:border-studio-gold transition-all" onchange="document.getElementById('recurring-weeks-group').classList.toggle('hidden')">
+                                    <svg class="absolute w-3 h-3 text-studio-black pointer-events-none opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                 </div>
                                 <span class="group-hover:text-white transition-colors">Repeat Weekly</span>
                             </label>
                             <div id="recurring-weeks-group" class="hidden mt-5">
                                 <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">For how many weeks?</label>
-                                <select id="manage-weeks" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white outline-none text-sm transition-all font-light focus:border-organization-gold appearance-none cursor-pointer">
+                                <select id="manage-weeks" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white outline-none text-sm transition-all font-light focus:border-studio-gold appearance-none cursor-pointer">
                                     <option value="4">4 Weeks</option>
                                     <option value="8">8 Weeks</option>
                                     <option value="12">12 Weeks</option>
@@ -212,33 +256,33 @@
                         </div>
                         
                         <div class="flex space-x-4 pt-6">
-                            <button type="submit" id="manage-save-btn" class="flex-1 py-4 rounded-full bg-organization-gold text-organization-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Save Event</button>
+                            <button type="submit" id="manage-save-btn" class="flex-1 py-4 rounded-full bg-studio-gold text-studio-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Save Class</button>
                             <button type="button" onclick="resetManageForm()" class="px-8 py-4 rounded-full border border-white/20 text-gray-400 hover:text-white hover:border-white text-xs uppercase tracking-[0.2em] font-semibold transition-all">Clear</button>
                         </div>
                         <div class="pt-6 mt-6 border-t border-white/10">
-                            <h4 class="text-sm text-organization-gold mb-3 uppercase tracking-widest">Quick Setup</h4>
-                            <button type="button" onclick="bulkGenerateSchedule()" class="w-full py-3 rounded-full border border-organization-gold text-organization-gold hover:bg-organization-gold hover:text-black transition-colors text-xs uppercase tracking-[0.2em] font-bold">Bulk Generate M-Th Schedule (12 Weeks)</button>
+                            <h4 class="text-sm text-studio-gold mb-3 uppercase tracking-widest">Quick Setup</h4>
+                            <button type="button" onclick="bulkGenerateSchedule()" class="w-full py-3 rounded-full border border-studio-gold text-studio-gold hover:bg-studio-gold hover:text-black transition-colors text-xs uppercase tracking-[0.2em] font-bold">Bulk Generate M-Th Schedule (12 Weeks)</button>
                         </div>
 
                     </form>
                 </div>
                 
                 <!-- Schedule List -->
-                <div class="lg:col-span-8 bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md flex flex-col h-[750px]">
-                    <div class="px-8 py-6 border-b border-white/10 bg-black/20 flex justify-between items-center">
+                <div class="lg:col-span-8 bg-white/5 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md flex flex-col h-[500px] md:h-[750px]">
+                    <div class="px-4 md:px-8 py-4 md:py-6 border-b border-white/10 bg-black/20 flex justify-between items-center">
                         <h3 class="text-xl font-serif text-white">Active Schedule</h3>
-                        <div class="text-xs text-organization-gold bg-organization-gold/10 px-3 py-1 rounded-full border border-organization-gold/20">Live Sync</div>
+                        <div class="text-xs text-studio-gold bg-studio-gold/10 px-3 py-1 rounded-full border border-studio-gold/20">Live Sync</div>
                     </div>
                     <div class="overflow-x-auto flex-grow overflow-y-auto hide-scrollbar">
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-black/40 border-b border-white/10 text-gray-400 uppercase tracking-[0.2em] text-[10px] font-semibold sticky top-0 backdrop-blur-md z-10">
                                 <tr>
-                                    <th class="px-8 py-5">Date & Time</th>
-                                    <th class="px-8 py-5">Event</th>
-                                    <th class="px-8 py-5">Instructor</th>
-                                    <th class="px-8 py-5">Price</th>
-                                    <th class="px-8 py-5">Cap</th>
-                                    <th class="px-8 py-5 text-right">Actions</th>
+                                    <th class="px-3 md:px-8 py-5">Date & Time</th>
+                                    <th class="px-3 md:px-8 py-5">Class</th>
+                                    <th class="hidden md:table-cell px-8 py-5">Instructor</th>
+                                    <th class="hidden md:table-cell px-8 py-5">Price</th>
+                                    <th class="px-3 md:px-8 py-5">Cap</th>
+                                    <th class="px-3 md:px-8 py-5 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="schedule-tbody" class="divide-y divide-white/5 text-sm font-light">
@@ -260,11 +304,11 @@
                 <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
                     <div class="relative w-full sm:w-auto">
                         <svg class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" id="customer-search" placeholder="Search customers..." class="pl-11 pr-4 py-3 bg-black/40 border border-white/10 rounded-full text-white focus:border-organization-gold outline-none text-base md:text-xs transition-all font-light focus:bg-black/60 w-full sm:w-64">
+                        <input type="text" id="customer-search" placeholder="Search customers..." class="pl-11 pr-4 py-3 bg-black/40 border border-white/10 rounded-full text-white focus:border-studio-gold outline-none text-base md:text-xs transition-all font-light focus:bg-black/60 w-full sm:w-64">
                     </div>
                     <div class="flex flex-row gap-3 w-full sm:w-auto">
-                        <button id="add-customer-btn" class="flex-1 sm:flex-none px-4 md:px-6 py-3 rounded-full border border-organization-gold text-organization-gold uppercase tracking-[0.15em] text-[10px] md:text-xs font-semibold hover:bg-organization-gold hover:text-organization-black transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">Add Walk-in</button>
-                        <button id="export-csv-btn" class="flex-1 sm:flex-none px-4 md:px-6 py-3 rounded-full bg-organization-gold text-organization-black uppercase tracking-[0.15em] text-[10px] md:text-xs font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">Export CSV</button>
+                        <button id="add-customer-btn" class="flex-1 sm:flex-none px-4 md:px-6 py-3 rounded-full border border-studio-gold text-studio-gold uppercase tracking-[0.15em] text-[10px] md:text-xs font-semibold hover:bg-studio-gold hover:text-studio-black transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">Add Client</button>
+                        <button id="export-csv-btn" class="flex-1 sm:flex-none px-4 md:px-6 py-3 rounded-full bg-studio-gold text-studio-black uppercase tracking-[0.15em] text-[10px] md:text-xs font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">Export CSV</button>
                     </div>
                 </div>
             </div>
@@ -274,42 +318,46 @@
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-black/40 border-b border-white/10 text-gray-400 uppercase tracking-[0.2em] text-[10px] font-semibold">
                             <tr>
-                                <th class="px-8 py-5">Guest Name</th>
-                                <th class="px-8 py-5">Email Address</th>
-                                <th class="px-8 py-5">Phone</th>
-                                <th class="px-8 py-5">Bookings</th>
-                                <th class="px-8 py-5">Membership</th>
-                                <th class="px-8 py-5">Terms Status</th>
-                                <th class="px-8 py-5 text-right">Actions</th>
+                                <th class="px-3 md:px-8 py-5">Name</th>
+                                <th class="hidden md:table-cell px-8 py-5">Email</th>
+                                <th class="hidden lg:table-cell px-8 py-5">Phone</th>
+                                <th class="px-3 md:px-8 py-5">Visits</th>
+                                <th class="hidden md:table-cell px-8 py-5">Credits</th>
+                                <th class="px-3 md:px-8 py-5">Status</th>
+                                <th class="px-3 md:px-8 py-5">Waiver</th>
+                                <th class="px-3 md:px-8 py-5 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="customers-tbody" class="divide-y divide-white/5 text-sm font-light">
-                            <tr><td colspan="7" class="px-8 py-12 text-center text-gray-500">Loading directory...</td></tr>
+                            <tr><td colspan="8" class="px-8 py-12 text-center text-gray-500">Loading directory...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Modals with updated styling -->
-        
-        <!-- Customer Details Modal -->
-        <div id="customer-details-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCustomerDetailsModal()"></div>
-            <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-2xl w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in max-h-[90vh] overflow-y-auto">
-                <button onclick="closeCustomerDetailsModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
-                    <div class="w-10 h-10 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20 shrink-0">
-                        <svg class="w-5 h-5 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    </div>
-                    <div class="break-all">
-                        <h3 id="cd-name" class="text-2xl font-serif text-white">Customer Details</h3>
-                        <p id="cd-email" class="text-sm text-gray-400 font-light break-words"></p>
-                    </div>
+    </div>
+    
+    <!-- Modals (Moved outside dashboard-screen to fix z-index overlapping) -->
+    
+    <!-- Customer Details Modal -->
+    <div id="customer-details-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCustomerDetailsModal()"></div>
+        <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-2xl w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCustomerDetailsModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                <div class="w-10 h-10 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20 shrink-0">
+                    <svg class="w-5 h-5 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 </div>
-                
+                <div class="break-all">
+                    <h3 id="cd-name" class="text-2xl font-serif text-white">Customer Details</h3>
+                    <p id="cd-email" class="text-sm text-gray-400 font-light break-words"></p>
+                </div>
+            </div>
+            
+            <div id="cd-view-mode" class="animate-fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-sm mt-6">
                     <div class="space-y-4">
                         <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Phone</span><span id="cd-phone" class="text-white"></span></div>
@@ -319,11 +367,28 @@
                     </div>
                     <div class="space-y-4">
                         <div class="bg-black/30 p-4 rounded-xl border border-white/5">
-                            <span class="block text-organization-gold text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Emergency Contact</span>
+                            <span class="block text-studio-gold text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Emergency Contact</span>
                             <div><span class="text-gray-400">Name:</span> <span id="cd-em-name" class="text-white"></span></div>
                             <div><span class="text-gray-400">Phone:</span> <span id="cd-em-phone" class="text-white"></span></div>
                         </div>
-                        <div><span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">Membership Expires</span><span id="cd-expires" class="text-white"></span></div>
+                        <!-- Membership & Access Card -->
+                        <div id="cd-membership-card" class="p-4 rounded-xl border"></div>
+                        <!-- 1:1 Credits (separate) -->
+                        <div id="cd-1on1-box" class="hidden">
+                            <span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-1">1:1 Session Credits</span>
+                            <span id="cd-1on1-credits" class="text-purple-400 font-bold"></span>
+                        </div>
+                        <div id="cd-past-due-box" class="hidden bg-red-500/10 border border-red-500/20 rounded-xl p-3 mt-2">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="block text-red-400 text-[10px] uppercase tracking-[0.2em] font-semibold mb-0.5">⚠️ Past Due Balance</span>
+                                    <span id="cd-past-due" class="text-red-400 font-bold text-sm"></span>
+                                </div>
+                                <button id="cd-clear-balance-btn" onclick="clearCustomerBalance()" class="px-4 py-2 bg-red-500 text-white text-[10px] uppercase tracking-[0.15em] font-bold rounded-full hover:bg-red-400 transition-colors shadow-sm">
+                                    Mark All Paid
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -333,117 +398,327 @@
                         <p id="cd-goals" class="text-gray-300 font-light bg-black/30 p-4 rounded-xl border border-white/5 italic"></p>
                     </div>
                     <div>
-                        <span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Terms Information</span>
+                        <span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Waiver Information</span>
                         <div class="bg-black/30 p-4 rounded-xl border border-white/5 space-y-2">
-                            <div><span class="text-gray-400">Signed At:</span> <span id="cd-terms-date" class="text-white"></span></div>
-                            <div><span class="text-gray-400">Legal Name Typed:</span> <span id="cd-terms-name" class="text-white font-script text-lg"></span></div>
-                            <div><span class="text-gray-400">Captured IP Address:</span> <span id="cd-terms-ip" class="text-white font-mono text-xs"></span></div>
-                            <div><span class="text-gray-400">Photo Release Consented:</span> <span id="cd-terms-photo" class="text-white"></span></div>
-                            <div id="cd-terms-minor-box" class="hidden"><span class="text-organization-gold font-bold">Minor Guardian Name:</span> <span id="cd-terms-minor" class="text-white"></span></div>
+                            <div><span class="text-gray-400">Signed At:</span> <span id="cd-waiver-date" class="text-white"></span></div>
+                            <div><span class="text-gray-400">Legal Name Typed:</span> <span id="cd-waiver-name" class="text-white font-script text-lg"></span></div>
+                            <div><span class="text-gray-400">Captured IP Address:</span> <span id="cd-waiver-ip" class="text-white font-mono text-xs"></span></div>
+                            <div><span class="text-gray-400">Photo Release Consented:</span> <span id="cd-waiver-photo" class="text-white"></span></div>
+                            <div id="cd-waiver-minor-box" class="hidden"><span class="text-studio-gold font-bold">Minor Guardian Name:</span> <span id="cd-waiver-minor" class="text-white"></span></div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Add Customer Modal -->
-        <div id="add-customer-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
-            <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
-                <button id="close-customer-btn" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div class="flex items-center space-x-3 mb-8">
-                    <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
-                        <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <!-- Booking History -->
+                <div class="mt-6">
+                    <span class="block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-semibold mb-2">Booking History</span>
+                    <div id="cd-booking-history" class="bg-black/30 p-4 rounded-xl border border-white/5 max-h-48 overflow-y-auto space-y-2">
+                        <p class="text-gray-600 text-sm">Loading...</p>
                     </div>
-                    <h3 class="text-2xl font-serif text-white">Create Profile</h3>
                 </div>
-                <form id="add-customer-form" class="space-y-5">
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Full Name</label>
-                        <input type="text" id="add-customer-name" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Email Address</label>
-                        <input type="email" id="add-customer-email" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Phone (Optional)</label>
-                        <input type="tel" id="add-customer-phone" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60">
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Assign to Event (Optional)</label>
-                        <select id="add-customer-event" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
-                            <option value="">-- Do Not Assign --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Membership Tier / Day Pass</label>
-                        <select id="add-customer-tier" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
-                            <option value="A La Carte">Day Pass (A La Carte)</option>
-                            <option value="1 Month">1 Month Unlimited</option>
-                            <option value="2 Months">2 Months Unlimited</option>
-                            <option value="3 Months">3 Months Unlimited</option>
-                            <option value="Founder">Founder (Lifetime)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Expiration Date</label>
-                        <input type="date" id="add-customer-expires" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
-                    </div>
-                    <button type="submit" id="add-customer-save-btn" class="w-full mt-4 py-4 rounded-full bg-organization-gold text-organization-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Create Profile</button>
-                </form>
-            </div>
-        </div>
 
-
-
-        <!-- Membership Modal -->
-        <div id="membership-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
-            <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
-                <button id="close-membership-btn" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 rounded-full bg-organization-gold/10 flex items-center justify-center border border-organization-gold/20">
-                        <svg class="w-4 h-4 text-organization-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    </div>
-                    <h3 class="text-2xl font-serif text-white">Manage Status</h3>
+                <div class="flex flex-col sm:flex-row gap-3 mt-10">
+                    <button onclick="openBillingModal()" class="flex-1 py-4 bg-studio-gold text-studio-black text-xs uppercase tracking-[0.2em] font-bold rounded-full hover:bg-white transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)]">Bill Customer</button>
+                    <button onclick="toggleEditCustomerMode(true)" class="flex-1 py-4 border border-studio-gold text-studio-gold text-xs uppercase tracking-[0.2em] font-bold rounded-full hover:bg-studio-gold hover:text-studio-black transition-all">Edit Information</button>
+                    <button onclick="generateWaiverPDF()" class="flex-1 py-4 border border-white/20 text-gray-400 hover:text-white hover:border-white text-xs uppercase tracking-[0.2em] font-bold rounded-full transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        View Waiver
+                    </button>
                 </div>
-                <p id="membership-customer-name" class="text-organization-gold text-xs uppercase tracking-[0.2em] font-semibold mb-8 ml-11"></p>
-                <form id="membership-form" class="space-y-5">
-                    <input type="hidden" id="membership-email">
-                    <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Membership Tier</label>
-                        <select id="membership-type" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
-                            <option value="A La Carte">A La Carte (Drop-in)</option>
-                            <option value="1 Month">1 Month Unlimited</option>
-                            <option value="2 Months">2 Months Unlimited</option>
-                            <option value="3 Months">3 Months Unlimited</option>
-                            <option value="Founder">Founder (Lifetime)</option>
-                        </select>
+            </div>
+
+            <div id="cd-edit-mode" class="hidden animate-fade-in mt-6">
+                <form id="edit-customer-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Name</label>
+                            <input type="text" id="edit-name" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Phone</label>
+                            <input type="tel" id="edit-phone" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Date of Birth</label>
+                            <input type="date" id="edit-dob" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm appearance-none">
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Secondary Email</label>
+                            <input type="email" id="edit-sec-email" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Expiration Date</label>
-                        <input type="date" id="membership-expires" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-organization-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Address</label>
+                        <input type="text" id="edit-address" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm">
                     </div>
-                    <button type="submit" id="membership-save-btn" class="w-full mt-6 py-4 rounded-full bg-organization-gold text-organization-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Update Profile</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Emergency Contact Name</label>
+                            <input type="text" id="edit-em-name" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Emergency Contact Phone</label>
+                            <input type="tel" id="edit-em-phone" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Fitness Goals & Medical Concerns</label>
+                        <textarea id="edit-goals" rows="4" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm resize-none"></textarea>
+                    </div>
+                    <div class="flex space-x-4 pt-6">
+                        <button type="submit" class="flex-1 py-4 bg-studio-gold text-studio-black text-xs uppercase tracking-[0.2em] font-bold rounded-full hover:bg-white transition-all">Save Changes</button>
+                        <button type="button" onclick="toggleEditCustomerMode(false)" class="px-8 py-4 border border-white/20 text-gray-400 hover:text-white rounded-full text-xs uppercase tracking-[0.2em] font-semibold transition-all">Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Add Customer Modal -->
+    <div id="add-customer-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCustomerModal()"></div>
+        <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
+            <button id="close-customer-btn" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-8 h-8 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20">
+                    <svg class="w-4 h-4 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-serif text-white">Create Profile</h3>
+            </div>
+            <form id="add-customer-form" class="space-y-5">
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Full Name</label>
+                    <input type="text" id="add-customer-name" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Email Address</label>
+                    <input type="email" id="add-customer-email" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Phone (Optional)</label>
+                    <input type="tel" id="add-customer-phone" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Class Experience Credits</label>
+                    <input type="number" id="add-customer-credits" value="0" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Assign to Class (Optional)</label>
+                    <select id="add-customer-class" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                        <option value="">-- Do Not Assign --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Membership Tier / Day Pass</label>
+                    <select id="add-customer-tier" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                        <option value="A La Carte">Day Pass (A La Carte)</option>
+                        <option value="1 Month Unlimited">1 Month Unlimited</option>
+                        <option value="3 Months Unlimited">3 Months Unlimited</option>
+                        <option value="6 Months Unlimited">6 Months Unlimited</option>
+                        <option value="12 Months Unlimited">12 Months Unlimited</option>
+                        <option value="Founder">Founder (Lifetime)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Expiration Date</label>
+                    <input type="date" id="add-customer-expires" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                </div>
+                <button type="submit" id="add-customer-save-btn" class="w-full mt-4 py-4 rounded-full bg-studio-gold text-studio-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Create Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Membership Modal -->
+    <div id="membership-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeMembershipModal()"></div>
+        <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
+            <button id="close-membership-btn" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="flex items-center space-x-3 mb-2">
+                <div class="w-8 h-8 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20">
+                    <svg class="w-4 h-4 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-serif text-white">Manage Status</h3>
+            </div>
+            <p id="membership-customer-name" class="text-studio-gold text-xs uppercase tracking-[0.2em] font-semibold mb-8 ml-11"></p>
+            <form id="membership-form" class="space-y-5">
+                <input type="hidden" id="membership-email">
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Membership Tier</label>
+                    <select id="membership-type" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                        <option value="A La Carte">A La Carte (Drop-in)</option>
+                        <option value="1 Month Unlimited">1 Month Unlimited</option>
+                        <option value="3 Months Unlimited">3 Months Unlimited</option>
+                        <option value="6 Months Unlimited">6 Months Unlimited</option>
+                        <option value="12 Months Unlimited">12 Months Unlimited</option>
+                        <option value="Founder">Founder (Lifetime)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Class Experience Credits</label>
+                    <input type="number" id="membership-credits" value="0" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">1:1 Session Credits</label>
+                    <input type="number" id="membership-1on1-credits" value="0" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60">
+                </div>
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Expiration Date</label>
+                    <input type="date" id="membership-expires" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none">
+                </div>
+                <button type="submit" id="membership-save-btn" class="w-full mt-6 py-4 rounded-full bg-studio-gold text-studio-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Update Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bill Customer Modal -->
+    <div id="billing-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeBillingModal()"></div>
+        <div class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-md w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in">
+            <button onclick="closeBillingModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="flex items-center space-x-3 mb-2">
+                <div class="w-8 h-8 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20">
+                    <svg class="w-4 h-4 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-serif text-white">Bill Customer</h3>
+            </div>
+            <p id="billing-customer-name" class="text-studio-gold text-xs uppercase tracking-[0.2em] font-semibold mb-8 ml-11"></p>
+
+            <form id="billing-form" class="space-y-5">
+                <input type="hidden" id="billing-email">
+                <input type="hidden" id="billing-name">
+
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-2 uppercase tracking-[0.2em] font-semibold">Select Plan</label>
+                    <select id="billing-tier" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-studio-gold outline-none text-sm transition-all font-light focus:bg-black/60 appearance-none cursor-pointer">
+                        <optgroup label="Class Packages">
+                            <option value="4 Class Plan">4 Class Plan — $115</option>
+                            <option value="6 Class Plan">6 Class Plan — $165</option>
+                            <option value="8 Class Plan">8 Class Plan — $225</option>
+                            <option value="12 Class Plan">12 Class Plan — $345</option>
+                        </optgroup>
+                        <optgroup label="Unlimited Memberships">
+                            <option value="1 Month Unlimited">1 Month Unlimited — $460</option>
+                            <option value="3 Months Unlimited">3 Months Unlimited — $600</option>
+                            <option value="6 Months Unlimited">6 Months Unlimited — $1,100</option>
+                            <option value="12 Months Unlimited">12 Months Unlimited — $2,000</option>
+                        </optgroup>
+                        <optgroup label="1:1 Private Sessions">
+                            <option value="1:1 Session (1x)">1:1 Session (1x) — $75</option>
+                            <option value="1:1 Sessions (3x)">1:1 Sessions (3x) — $225</option>
+                            <option value="1:1 Sessions (5x)">1:1 Sessions (5x) — $375</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-gray-500 text-[10px] mb-3 uppercase tracking-[0.2em] font-semibold">Payment Method</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="billing-payment" value="stripe" checked class="peer sr-only">
+                            <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-white/10 bg-black/40 text-gray-400 text-xs uppercase tracking-[0.15em] font-semibold peer-checked:border-studio-gold peer-checked:text-studio-gold peer-checked:bg-studio-gold/10 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                Send Link
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="billing-payment" value="cash" class="peer sr-only">
+                            <div class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-white/10 bg-black/40 text-gray-400 text-xs uppercase tracking-[0.15em] font-semibold peer-checked:border-studio-gold peer-checked:text-studio-gold peer-checked:bg-studio-gold/10 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                Cash
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="billing-stripe-note" class="bg-studio-gold/5 border border-studio-gold/10 rounded-xl p-4 text-xs text-gray-400 font-light">
+                    <span class="text-studio-gold font-semibold">Stripe Link:</span> A branded payment email will be sent to the customer. Their account will be updated automatically when payment completes.
+                </div>
+                <div id="billing-cash-note" class="hidden bg-green-500/5 border border-green-500/10 rounded-xl p-4 text-xs text-gray-400 font-light">
+                    <span class="text-green-400 font-semibold">Cash/In-Person:</span> The customer's membership and credits will be activated immediately. Make sure to collect payment in person.
+                </div>
+
+                <button type="submit" id="billing-submit-btn" class="w-full mt-6 py-4 rounded-full bg-studio-gold text-studio-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)]">Send Payment Link</button>
+            </form>
+
+            <!-- Success State -->
+            <div id="billing-success" class="hidden text-center py-4">
+                <div class="w-16 h-16 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20 mx-auto mb-6">
+                    <svg class="w-8 h-8 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 id="billing-success-title" class="text-2xl font-serif text-white mb-2">Invoice Sent!</h3>
+                <p id="billing-success-msg" class="text-gray-400 text-sm mb-8"></p>
+                <button onclick="closeBillingModal()" class="w-full py-4 bg-studio-gold rounded-full text-studio-black text-sm font-semibold tracking-[0.2em] uppercase hover:bg-white transition-all">Done</button>
+            </div>
+        </div>
+    </div>
     
+    <!-- Manage Schedule View (MODAL VERSION FOR 1:1) -->
+    <div id="manage-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeManageModal()"></div>
+        <div id="manage-modal-content" class="bg-[#111] border border-white/10 rounded-3xl p-6 md:p-10 max-w-xl w-full shadow-[0_0_50px_rgba(0,0,0,0.5)] relative z-10 animate-scale-in max-h-[90vh] overflow-y-auto">
+            <!-- Summary view after confirm -->
+            <div id="manage-summary-view" class="hidden text-center py-4">
+                <div class="w-16 h-16 rounded-full bg-studio-gold/10 flex items-center justify-center border border-studio-gold/20 mx-auto mb-6">
+                    <svg class="w-8 h-8 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 class="text-2xl font-serif text-white mb-2">Sessions Scheduled</h3>
+                <p class="text-gray-400 text-sm mb-8">The customer has been notified via email.</p>
+                <div id="scheduled-sessions-list" class="space-y-3 mb-8 text-left max-w-sm mx-auto"></div>
+                <button onclick="closeManageModal()" class="w-full py-4 bg-studio-gold rounded-full text-studio-black text-sm font-semibold tracking-[0.2em] uppercase hover:bg-white transition-all">Done</button>
+            </div>
+            
+            <div id="manage-form-container">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 id="modal-manage-title" class="text-2xl font-serif text-white">Schedule Private Session</h3>
+                    <button onclick="closeManageModal()" class="text-gray-500 hover:text-white transition-colors bg-white/5 hover:bg-white/10 p-2.5 rounded-full z-20 relative flex-shrink-0" title="Close">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div id="modal-form-portal"></div>
+            </div>
+        </div>
+    </div>
+
     <style>
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        /* Scrollbar hiding for clean tab and table UX */
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Animations */
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         .animate-scale-in { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Mobile table cell padding override — JS-generated rows use px-8, 
+           but on small screens we need tighter spacing for readability */
+        @media (max-width: 767px) {
+            #roster-tbody td,
+            #customers-tbody td,
+            #schedule-tbody td { padding-left: 0.75rem; padding-right: 0.75rem; font-size: 0.8rem; }
+
+            /* Hide email column on roster table (mobile) */
+            #roster-tbody td:nth-child(3) { display: none; }
+
+            /* Hide email, phone, credits columns on customer directory (mobile) */
+            #customers-tbody td:nth-child(2) { display: none; }
+            #customers-tbody td:nth-child(3) { display: none; }
+            #customers-tbody td:nth-child(5) { display: none; }
+        }
+
+        /* Hide phone column on tablets too */
+        @media (max-width: 1023px) {
+            #customers-tbody td:nth-child(3) { display: none; }
+        }
     </style>
 
-    <script type="module" src="/js/admin.js"></script>
+    <script type="module" src="/js/admin-v17.js?v=27"></script>
+    <script src="/js/waiver-pdf.js?v=1"></script>
 </body>
 </html>

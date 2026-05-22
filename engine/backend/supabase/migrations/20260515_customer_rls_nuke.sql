@@ -5,7 +5,7 @@ DROP POLICY IF EXISTS "Public profiles insert" ON public.customers;
 DROP POLICY IF EXISTS "Public profiles update" ON public.customers;
 
 -- 1. Admins have FULL access
-CREATE POLICY "Admin All Access" ON public.customers FOR ALL USING ( auth.jwt() ->> 'email' IN ('admin@example.com', 'YOUR_SUPER_ADMIN_EMAIL') );
+CREATE POLICY "Admin All Access" ON public.customers FOR ALL USING ( auth.jwt() ->> 'email' IN ('{{ADMIN_EMAIL}}', '{{DEV_EMAIL}}') );
 
 -- 2. Public can INSERT 
 CREATE POLICY "Public Insert" ON public.customers FOR INSERT WITH CHECK (true);

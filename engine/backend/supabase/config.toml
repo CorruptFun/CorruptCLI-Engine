@@ -2,7 +2,7 @@
 # https://supabase.com/docs/guides/local-development/cli/config
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
-project_id = "app"
+project_id = "{{APP_PREFIX}}"
 
 [api]
 enabled = true
@@ -85,13 +85,13 @@ enabled = true
 # The maximum length in bytes of HTTP request headers. (default: 4096)
 # max_header_length = 4096
 
-[organization]
+[studio]
 enabled = true
-# Port to use for Supabase Organization.
+# Port to use for Supabase Studio.
 port = 54323
 # External URL of the API server that frontend connects to.
 api_url = "http://127.0.0.1"
-# OpenAI API Key to use for Supabase AI in the Supabase Organization.
+# OpenAI API Key to use for Supabase AI in the Supabase Studio.
 openai_api_key = "env(OPENAI_API_KEY)"
 
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
@@ -151,11 +151,11 @@ max_indexes = 5
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "https://www.yourdomain.com"
+site_url = "https://www.{{CLIENT_DOMAIN}}"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://yourdomain.com", "https://yourdomain.com/admin.html", "https://www.yourdomain.com/admin.html"]
+additional_redirect_urls = ["https://{{CLIENT_DOMAIN}}", "https://{{CLIENT_DOMAIN}}/admin", "https://{{CLIENT_DOMAIN}}/admin.html", "https://www.{{CLIENT_DOMAIN}}/admin", "https://www.{{CLIENT_DOMAIN}}/admin.html"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -407,6 +407,11 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
 
+[functions.admin-magic-link]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/admin-magic-link/index.ts"
+
 [functions.stripe-checkout]
 enabled = true
 verify_jwt = true
@@ -429,27 +434,27 @@ entrypoint = "./functions/verify-payment/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/verify-payment/*.html" ]
 
-[functions.stripe-subscription-checkout]
+[functions.stripe-membership-checkout]
 enabled = true
 verify_jwt = true
-import_map = "./functions/stripe-subscription-checkout/deno.json"
+import_map = "./functions/stripe-membership-checkout/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/stripe-subscription-checkout/index.ts"
+entrypoint = "./functions/stripe-membership-checkout/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/stripe-subscription-checkout/*.html" ]
+# static_files = [ "./functions/stripe-membership-checkout/*.html" ]
 
-[functions.verify-subscription-payment]
+[functions.verify-membership-payment]
 enabled = true
 verify_jwt = true
-import_map = "./functions/verify-subscription-payment/deno.json"
+import_map = "./functions/verify-membership-payment/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/verify-subscription-payment/index.ts"
+entrypoint = "./functions/verify-membership-payment/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/verify-subscription-payment/*.html" ]
+# static_files = [ "./functions/verify-membership-payment/*.html" ]
 
 [functions.send-reminders]
 enabled = true
@@ -472,3 +477,67 @@ entrypoint = "./functions/init-stripe/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/init-stripe/*.html" ]
+
+# --- Webhook-triggered functions (no JWT required) ---
+
+[functions.booking-alert]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/booking-alert/index.ts"
+
+[functions.class-alert]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/class-alert/index.ts"
+
+[functions.admin-notification-webhook]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/admin-notification-webhook/index.ts"
+
+[functions.stripe-webhook]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/stripe-webhook/index.ts"
+
+[functions.welcome-email]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/welcome-email/index.ts"
+
+# --- Cron/reminder functions ---
+
+[functions.billing-reminders]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/billing-reminders/index.ts"
+
+[functions.schedule-reminders]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/schedule-reminders/index.ts"
+
+[functions.waiver-reminder]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/waiver-reminder/index.ts"
+
+# --- Stripe checkout functions ---
+
+[functions.stripe-1on1-checkout]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/stripe-1on1-checkout/index.ts"
+
+# --- Utility functions ---
+
+[functions.log-error]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/log-error/index.ts"
+
+[functions.admin-billing]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/admin-billing/index.ts"
+

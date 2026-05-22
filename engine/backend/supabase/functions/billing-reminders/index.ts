@@ -59,7 +59,7 @@ serve(async (req) => {
 
       const portalSession = await stripe.billingPortal.sessions.create({
         customer: sub.stripe_customer_id,
-        return_url: 'https://yourdomain.com/dashboard',
+        return_url: 'https://{{CLIENT_DOMAIN}}/dashboard',
       });
 
       const firstName = sub.first_name || 'there';
@@ -71,7 +71,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "SaaS Boilerplate Billing <billing@updates.yourdomain.com>",
+          from: "{{CLIENT_NAME}} Billing <bookings@updates.{{CLIENT_DOMAIN}}>",
           to: [email],
           subject: `Your class pass renews in ${sub.days} days!`,
           html: `<div style="font-family: sans-serif; color: #111; max-width: 600px; margin: 0 auto; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;">

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{CLIENT_NAME}} | Liability Waiver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: { black: '#0a0a0a', dark: '#141414', gold: '#cba153', lightgold: '#e6c875', darkgold: '#8c6b2e' }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0a0a; color: #f3f4f6; }
+        .btn-gold { background: linear-gradient(135deg, #cba153 0%, #8c6b2e 100%); color: #0a0a0a; transition: all 0.3s ease; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(203,161,83,0.5); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col items-center py-12 px-4">
+
+    <div class="max-w-3xl w-full bg-studio-dark border border-white/10 rounded-3xl p-8 shadow-2xl relative">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-serif text-white mb-2">Registration & Liability Waiver</h1>
+            <p class="text-gray-400 text-sm">Please complete your profile and sign the mandatory waiver before your first class.</p>
+        </div>
+
+        <!-- Email Prompt Screen (Shown if accessed without ?email=) -->
+        <div id="email-prompt-screen" class="hidden text-center py-8">
+            <p class="text-gray-400 mb-6 text-sm">Please enter the email address you used to purchase your membership or class to pull up your waiver.</p>
+            <form id="email-prompt-form" class="max-w-sm mx-auto space-y-4">
+                <input type="email" id="prompt-email" required placeholder="your.email@example.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-studio-gold text-center">
+                <button type="submit" class="w-full btn-gold py-4 rounded-full font-sans uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(203,161,83,0.3)]">Find My Waiver</button>
+            </form>
+        </div>
+
+        <form id="waiver-form" class="space-y-8 hidden">
+            <input type="hidden" id="customer-email" value="">
+
+            <!-- Section 1: Missing User Data -->
+            <div>
+                <h3 class="text-studio-gold font-serif text-xl border-b border-white/10 pb-2 mb-6">1. Participant Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Full Name</label>
+                        <input type="text" id="w-name" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Date of Birth</label>
+                        <input type="date" id="w-dob" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold appearance-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Phone Number</label>
+                        <input type="tel" id="w-phone" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Home Address</label>
+                        <input type="text" id="w-address" required placeholder="Street, City, State, Zip" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Emergency Contact Name</label>
+                        <input type="text" id="w-em-name" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Emergency Contact Phone</label>
+                        <input type="tel" id="w-em-phone" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Secondary Email Address (Optional)</label>
+                        <input type="email" id="w-sec-email" placeholder="backup@example.com" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Physical Goals & Medical Concerns</label>
+                    <textarea id="w-goals" required rows="3" placeholder="What physical goals do you want to achieve? Any injuries, pregnancy, surgeries, or limitations?" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Section 2: The Waiver -->
+            <div>
+                <h3 class="text-studio-gold font-serif text-xl border-b border-white/10 pb-2 mb-6">2. Liability Waiver & Release Agreement</h3>
+                
+                <div class="bg-black/40 border border-white/10 rounded-xl p-6 h-64 overflow-y-auto text-sm text-gray-300 space-y-4 mb-6">
+                    <p class="font-bold text-white text-center">{{CLIENT_NAME}}<br>Liability Waiver & Release Agreement</p>
+                    <p>This Liability Waiver and Release Agreement (“Agreement”) is entered into by and between {{CLIENT_NAME}} (“Studio,” “Company,” “we,” or “us”) and the undersigned participant (“Client,” “Participant,” or “I”). By signing this Agreement, I acknowledge and agree to the following terms:</p>
+
+
+
+
+
+
+
+
+
+
+                </div>
+
+                <div class="space-y-6">
+                    <label class="flex items-center space-x-4 text-sm text-gray-300 cursor-pointer bg-black/20 p-4 rounded-2xl border border-white/5 hover:border-white/20 transition-all">
+                        <input type="checkbox" id="w-photo-consent" class="appearance-none w-10 h-10 border border-white/20 rounded-xl bg-black/40 checked:bg-studio-gold checked:border-studio-gold transition-all flex-shrink-0 cursor-pointer">
+                        <span class="leading-relaxed"><strong class="text-white">Photo & Video Release:</strong> I grant {{CLIENT_NAME}} permission to photograph or record me during classes or events for promotional, educational, or business purposes.</span>
+                    </label>
+
+                    <div class="pt-6 border-t border-white/10">
+                        <label class="flex items-center space-x-4 text-sm text-gray-300 cursor-pointer bg-studio-gold/5 p-6 rounded-2xl border border-studio-gold/20 hover:border-studio-gold/40 transition-all">
+                            <input type="checkbox" id="w-agree-terms" required class="appearance-none w-10 h-10 border border-studio-gold/30 rounded-xl bg-black/40 checked:bg-studio-gold checked:border-studio-gold transition-all flex-shrink-0 cursor-pointer">
+                            <span class="leading-relaxed font-medium"><strong class="text-white">Mandatory Acknowledgment:</strong> I acknowledge that I have carefully read this Agreement, I fully understand its contents, I understand I am waiving certain legal rights, and I sign this Agreement voluntarily.</span>
+                        </label>
+                    </div>
+
+                    <div class="pt-4">
+                        <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Electronic Signature (Type Full Legal Name)</label>
+                        <input type="text" id="w-signature" required class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold font-script text-2xl tracking-wide placeholder:font-sans placeholder:text-sm">
+                    </div>
+
+                    <div id="minor-section" class="pt-4 mt-4 border-t border-white/10">
+                        <label class="flex items-center space-x-3 text-sm text-gray-300 cursor-pointer mb-4">
+                            <input type="checkbox" id="w-is-minor" onchange="document.getElementById('guardian-fields').classList.toggle('hidden')" class="appearance-none w-5 h-5 border border-white/20 rounded bg-black/40 checked:bg-studio-gold checked:border-studio-gold transition-all">
+                            <span>I am filling this out on behalf of a Minor (Under 18).</span>
+                        </label>
+                        
+                        <div id="guardian-fields" class="hidden space-y-4 bg-black/20 p-4 rounded-xl border border-white/5">
+                            <div>
+                                <label class="block text-gray-400 text-xs uppercase tracking-widest mb-2">Parent/Guardian Full Name</label>
+                                <input type="text" id="w-guardian-name" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-studio-gold">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submit-waiver-btn" class="w-full btn-gold py-4 rounded-full font-sans uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(203,161,83,0.3)]">Sign & Complete Registration</button>
+        </form>
+
+        <div id="success-screen" class="hidden text-center py-16 animate-fade-in">
+            <div class="w-24 h-24 bg-studio-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-studio-gold/20 shadow-[0_0_30px_rgba(203,161,83,0.15)]">
+                <svg class="w-12 h-12 text-studio-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-4xl font-serif text-white mb-6">Thank You!</h2>
+            <a href="/" class="inline-block px-10 py-4 rounded-full bg-studio-gold text-studio-black uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(203,161,83,0.3)] hover:bg-white transition-all transform hover:-translate-y-1">Return Home</a>
+        </div>
+    </div>
+
+    <script type="module" src="/js/waiver.js?v=2"></script>
+</body>
+</html>

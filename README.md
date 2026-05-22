@@ -10,46 +10,94 @@ This repository is **Agent-Optimized**: It includes codified skills and CLI tool
 
 ## ⚡ Core Capabilities
 
-### 1. 🏗️ Intellectual Scaffolding (`corrupt.py`)
+### 1. 🏗️ Intelligent Scaffolding (`corrupt.py`)
 The engine doesn't just copy files; it performs an intelligent rebranding.
-- **Tenancy Modes**: Deploy in **Single-Tenant** (dedicated project) or **Multi-Tenant** (shared instance via `org_id`) modes.
 - **Instant Theming**: Automatically injects client names, domains, admin emails, and primary brand colors across the entire frontend and backend.
+- **Optional Features**: Choose which modules to include (e.g., liability waiver system).
+- **Environment Generation**: Produces `.env.template` with all required secrets.
 
-### 2. 📡 Command Center (`super.html`)
-The **Super Admin Portal** allows for global fleet management from a single interface.
-- **Fleet Auditing**: View every organization, their MRR (Monthly Recurring Revenue), and active subscriber counts.
-- **Tenant Impersonation**: One-click "Launch Dashboard" to jump into any client's admin or billing view.
-- **Global Intelligence**: Aggregated revenue and activity streams across the entire multi-tenant network.
+### 2. 🔐 Production-Grade Security
+- **Row Level Security (RLS)** on all database tables
+- **Edge Function Proxies** for sensitive data access (no direct client reads)
+- **OTP Authentication** for admin access (no passwords)
+- **Device Trust** with configurable 30-day session persistence
 
-### 3. 📅 Premium Booking Engine
-- **Real-Time Availability**: Dynamic calendar with 1 horizontal scrolling and instant capacity management.
-- **Capacity Guardrails**: Prevents overbooking via native PostgreSQL triggers.
+### 3. 💳 Full Payment Stack
+- **Stripe Checkout** for one-time class payments
+- **Credit Packs** with atomic deduction via database triggers
+- **Membership Subscriptions** with expiry tracking
+- **Webhook Processing** for payment event handling
 
-### 4. 💳 Subscription & Revenue Stack
-- **Native Stripe Integration**: Handles recurring tiered memberships.
-- **Billing Analytics Dashboard**: A specialized admin interface for tracking MRR, Churn, and customer transactions.
+### 4. 📧 Automated Communications
+- Welcome emails, booking confirmations, schedule reminders
+- Credit depletion alerts, waiver reminders
+- Admin notifications for all customer actions
+- CAN-SPAM compliant unsubscribe handling
 
----
-
-## 🏛️ Technical Stack
-- **Frontend**: Vercel (Next.js/HTML5/Tailwind)
-- **Database**: Supabase (PostgreSQL with Row Level Security)
-- **Security**: Hardened RLS with JWT-injected Multi-Tenancy.
-- **Automation**: Vercel Cron Jobs + Supabase Edge Functions.
-
----
-
-## 🛠️ The Corrupt Toolkit
-
-### `python3 corrupt.py`
-The master initializer. Use this to spin up a new client site.
-
-### `python3 validate.py`
-The pre-flight auditor. Run this to verify API keys and connectivity.
-
-### `engine/super.html`
-The Super Admin Portal. Log in as `YOUR_SUPER_ADMIN_EMAIL` to manage the fleet.
+### 5. 📡 Admin Command Center
+- **OTP-secured admin portal** with class management
+- **Customer management** with booking history and credit tracking
+- **Class scheduling** with capacity and instructor management
+- **Attendance tracking** with check-in and no-show management
+- **Financial dashboard** with revenue tracking
 
 ---
 
-**Built and Managed by Corrupt Solutions.** 💠
+## 🚀 Quick Start
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/CorruptFun/CorruptCLI-Engine.git
+cd CorruptCLI-Engine
+
+# 2. Run the scaffolding wizard
+python3 corrupt.py
+
+# 3. Follow the prompts to configure your client
+
+# 4. Validate the deployment
+python3 validate.py
+```
+
+See [`engine/README.md`](engine/README.md) for detailed setup instructions.
+
+---
+
+## 📁 Repository Structure
+
+```
+CorruptCLI-Engine/
+├── corrupt.py          # Scaffolding wizard (run this first)
+├── validate.py         # Pre-flight deployment checker
+├── engine/             # The template engine (source of truth)
+│   ├── frontend/       # HTML, JS, CSS (Vercel-hosted)
+│   ├── backend/        # Supabase edge functions, migrations, schema
+│   └── README.md       # Detailed setup guide
+├── projects/           # Generated client projects (gitignored)
+│   └── clients/
+├── assets/             # Repo assets (banner, etc.)
+├── SKILL.md            # Agent skill definition
+└── RLS_BLUEPRINT.md    # Security architecture reference
+```
+
+---
+
+## 🛡️ Security Architecture
+
+```
+Browser (anon key) ──→ Supabase
+                         ├── RLS: Block SELECT on customers/bookings
+                         ├── RLS: Allow INSERT/UPDATE for self-service
+                         └── Edge Functions (service_role)
+                              └── customer-lookup (secure proxy)
+                              └── stripe-checkout (payment session)
+                              └── booking-alert (notifications)
+```
+
+See [`RLS_BLUEPRINT.md`](RLS_BLUEPRINT.md) for the complete security model.
+
+---
+
+## 📄 License
+
+Built by [Corrupt Solutions](https://github.com/CorruptFun).

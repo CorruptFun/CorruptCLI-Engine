@@ -1,5 +1,5 @@
 -- ==============================================
--- SaaS Boilerplate: CREDIT SYSTEM ARCHITECTURE UPDATE
+-- REFORM HER: CREDIT SYSTEM ARCHITECTURE UPDATE
 -- ==============================================
 
 -- 1. Add class credits and medical notes to the customers table

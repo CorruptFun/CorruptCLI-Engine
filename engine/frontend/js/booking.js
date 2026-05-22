@@ -1,10 +1,25 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+import { supabase, supabaseUrl, supabaseAnonKey } from './supabase-config.js'
 
-// Initialize Supabase
-const supabaseUrl = 'YOUR_SUPABASE_URL'
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY'
-const orgId = ORG_ID_PLACEHOLDER
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Helper to log errors to Supabase
+async function logError(context, message, stack, metadata = {}) {
+    console.error(`Error in ${context}:`, message);
+    try {
+        await supabase.functions.invoke('log-error', {
+            body: {
+                source: 'client-browser',
+                context,
+                message,
+                stack,
+                metadata: {
+                    url: window.location.href,
+                    ...metadata
+                }
+            }
+        });
+    } catch (e) {
+        console.error("Failed to log error to server:", e);
+    }
+}
 
 // Format date helpers
 const formatTime = (isoString) => {
@@ -28,26 +43,23 @@ export async function loadSchedule() {
 
     scheduleContainer.innerHTML = '<p class="text-gray-400 text-center py-8">Loading calendar...</p>';
 
-    let query = supabase
-        .from('class_availability')
-        .select('*')
-        .gte('start_time', new Date().toISOString())
-        .order('start_time', { ascending: true });
+    try {
+        const { data: classes, error } = await supabase
+            .from('class_availability')
+            .select('*')
+            .eq('is_private', false)
+            .gte('start_time', new Date().toISOString())
+            .order('start_time', { ascending: true });
 
-    if (orgId) {
-        query = query.eq('org_id', orgId);
-    }
+        if (error) throw error;
 
-    const { data: classes, error } = await query;
-
-    if (error) {
+        allClasses = classes || [];
+        renderCalendarDays();
+        renderClassesForDate(selectedDateStr);
+    } catch (err) {
+        logError('loadSchedule', err.message, err.stack);
         scheduleContainer.innerHTML = '<p class="text-red-400">Error loading schedule. Please try again later.</p>';
-        return;
     }
-
-    allClasses = classes || [];
-    renderCalendarDays();
-    renderClassesForDate(selectedDateStr);
 }
 
 window.selectDate = (dateStr) => {
@@ -72,7 +84,7 @@ function renderCalendarDays() {
         const dayNum = d.getDate();
         
         const isSelected = dateStr === selectedDateStr;
-        const bgClass = isSelected ? 'bg-organization-gold text-black' : 'bg-organization-dark border border-white/10 text-white hover:border-organization-gold/50';
+        const bgClass = isSelected ? 'bg-studio-gold text-black' : 'bg-studio-dark border border-white/10 text-white hover:border-studio-gold/50';
         
         const btn = document.createElement('button');
         btn.onclick = () => selectDate(dateStr);
@@ -118,15 +130,15 @@ function renderClassesForDate(dateStr) {
                 </div>
             `;
         } else {
-            card.className = 'group border border-organization-gold/20 bg-organization-dark p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center text-left hover:border-organization-gold/60 transition duration-500 shadow-xl';
+            card.className = 'group border border-studio-gold/20 bg-studio-dark p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center text-left hover:border-studio-gold/60 transition duration-500 shadow-xl';
             card.innerHTML = `
                 <div class="mb-4 md:mb-0">
-                    <p class="text-organization-gold font-sans text-xs tracking-widest uppercase mb-2 border-b border-organization-gold/30 pb-1 inline-block">${formatDate(cls.start_time)}</p>
-                    <h4 class="text-2xl font-serif text-white mb-2 group-hover:text-organization-lightgold transition">${cls.title}</h4>
+                    <p class="text-studio-gold font-sans text-xs tracking-widest uppercase mb-2 border-b border-studio-gold/30 pb-1 inline-block">${formatDate(cls.start_time)}</p>
+                    <h4 class="text-2xl font-serif text-white mb-2 group-hover:text-studio-lightgold transition">${cls.title}</h4>
                     <p class="text-gray-400 font-sans text-sm font-light">${formatTime(cls.start_time)} - ${formatTime(cls.end_time)} | <span class="text-white/80">Instructor: ${cls.instructor_name}</span></p>
                 </div>
                 <div>
-                    <button onclick="openBookingModal('${cls.id}', '${cls.title}', '${cls.start_time}')" class="px-8 py-4 rounded-full bg-organization-gold text-organization-black font-sans uppercase tracking-widest text-sm font-semibold hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">
+                    <button onclick="openBookingModal('${cls.id}', '${cls.title}', '${cls.start_time}')" class="px-8 py-4 rounded-full bg-studio-gold text-studio-black font-sans uppercase tracking-widest text-sm font-semibold hover:bg-white transition-colors duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] whitespace-nowrap">
                         Book Now
                     </button>
                 </div>
@@ -143,6 +155,21 @@ window.openBookingModal = (classId, title, startTime) => {
     document.getElementById('modal-class-title').innerText = title + ' - ' + formatTime(startTime);
     document.getElementById('booking-success-msg').classList.add('hidden');
     document.getElementById('booking-form').classList.remove('hidden');
+
+    // Reset membership verification state
+    const paymentSelect = document.getElementById('booking-payment');
+    const membershipStatus = document.getElementById('membership-status');
+    const submitBtn = document.getElementById('submit-booking-btn');
+    if (paymentSelect) paymentSelect.classList.add('hidden');
+    if (membershipStatus) {
+        membershipStatus.classList.remove('hidden');
+        membershipStatus.innerHTML = 'Enter your email above to verify your membership';
+        membershipStatus.className = 'w-full bg-studio-black border border-studio-gold/20 rounded-xl px-4 py-3 text-gray-500 font-sans text-sm';
+    }
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
 
     // 24-Hour Rule Check
     const warningEl = document.getElementById('booking-warning');
@@ -166,6 +193,8 @@ window.openBookingModal = (classId, title, startTime) => {
     }
     if (savedUser.email) {
         document.getElementById('booking-email').value = savedUser.email;
+        // Auto-trigger membership check if email is pre-filled
+        setTimeout(() => document.getElementById('booking-email').dispatchEvent(new Event('blur')), 100);
     }
 };
 
@@ -191,8 +220,8 @@ window.clearSavedUser = () => {
     
     const emailInput = document.getElementById('profile-email');
     emailInput.removeAttribute('readonly');
-    emailInput.classList.remove('bg-organization-dark/50', 'text-gray-500', 'cursor-not-allowed');
-    emailInput.classList.add('bg-organization-dark', 'text-white', 'focus:border-organization-gold');
+    emailInput.classList.remove('bg-studio-dark/50', 'text-gray-500', 'cursor-not-allowed');
+    emailInput.classList.add('bg-studio-dark', 'text-white', 'focus:border-studio-gold');
 };
 
 // Handle Form Submission
@@ -208,103 +237,181 @@ window.submitBooking = async (event) => {
     const paymentMethod = document.getElementById('booking-payment').value;
 
     try {
-        // --- NEW: WAIVER & CAPACITY PRE-CHECK ---
-        // Fetch user from DB to check terms status
-        const { data: customerData } = await supabase
-            .from('customers')
-            .select('terms_signed_at, class_credits, membership_expires_at')
-            .eq('email', email)
-            .maybeSingle();
+        // --- STRIPE PAY-PER-CLASS PATH ---
+        if (paymentMethod === 'stripe') {
+            // Redirect to Stripe Checkout — stripe-checkout function handles booking + payment
+            const { data, error } = await supabase.functions.invoke('stripe-checkout', {
+                body: { classId, name, email, userId: null }
+            });
+            if (error) throw error;
+            if (data?.url) {
+                window.location.href = data.url;
+                return;
+            }
+            throw new Error('Failed to create checkout session.');
+        }
 
-        let needsTerms = false;
+        // --- PAY AT STUDIO (CASH) PATH ---
+        if (paymentMethod === 'cash') {
+            // Ensure customer record exists via edge function (anon can't SELECT customers directly)
+            const { data: cashCheck } = await supabase.functions.invoke('customer-lookup', {
+                body: { type: 'booking_eligibility', email }
+            });
+            if (!cashCheck || cashCheck.found === false) {
+                // New customer — create their record (INSERT is allowed by RLS)
+                await supabase.from('customers').insert({
+                    email, name, membership_type: 'User'
+                });
+            }
 
-        // If they exist in DB, check terms expiration
-        if (customerData) {
-            if (!customerData.terms_signed_at) {
-                needsTerms = true;
-            } else {
-                const signedDate = new Date(customerData.terms_signed_at);
-                const oneYearAgo = new Date();
-                oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-                if (signedDate < oneYearAgo) {
-                    needsTerms = true;
+            // Waiver pre-check — reuse the lookup data from above
+            const cashLookupData = cashCheck;
+            if (cashLookupData && cashLookupData.found !== false) {
+                let needsWaiver = false;
+                if (!cashLookupData.waiver_signed_at) {
+                    needsWaiver = true;
+                } else {
+                    const signedDate = new Date(cashLookupData.waiver_signed_at);
+                    const oneYearAgo = new Date();
+                    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+                    if (signedDate < oneYearAgo) needsWaiver = true;
+                }
+                if (needsWaiver) {
+                    const userName = cashLookupData.name || name;
+                    if (confirm(`${userName}, your annual liability waiver is missing or expired. Would you like us to email you a secure link to sign the waiver so you can complete your booking?`)) {
+                        await supabase.functions.invoke('booking-alert', {
+                            body: { type: 'send_waiver_link', email, name: userName }
+                        });
+                        alert("Email sent! Please check your inbox, sign the waiver, and then return here to finish booking.");
+                    }
+                    btn.innerText = 'Confirm Booking';
+                    btn.disabled = false;
+                    return;
                 }
             }
-        } else {
-            // If they DO NOT exist in DB, they definitely need a terms.
-            // If they are paying via Stripe right now, the post-checkout redirect handles it.
-            // But if they try to use Cash/Credits without an account, block them.
-            if (paymentMethod !== 'stripe') {
-                needsTerms = true;
+
+            // Insert cash booking — pending payment status (admin sees this as owing)
+            const { error: cashBookingErr } = await supabase
+                .from('bookings')
+                .insert([{
+                    class_id: classId,
+                    user_id: null,
+                    guest_name: name,
+                    guest_email: email,
+                    payment_method: 'cash',
+                    payment_status: 'pending'
+                }]);
+            if (cashBookingErr) {
+                if (cashBookingErr.code === '23505') {
+                    throw new Error("You have already booked this class.");
+                }
+                throw cashBookingErr;
+            }
+
+            // Save for future auto-fill
+            localStorage.setItem('app_user', JSON.stringify({ name, email }));
+
+            // Show success with payment reminder
+            document.getElementById('booking-form').classList.add('hidden');
+            document.getElementById('booking-success-msg').classList.remove('hidden');
+            return;
+        }
+
+        // --- MEMBERSHIP/CREDITS PATH ---
+        const { data: lookupData, error: lookupErr } = await supabase.functions.invoke('customer-lookup', {
+            body: { type: 'booking_eligibility', email }
+        });
+        if (lookupErr) throw lookupErr;
+        const customerData = lookupData;
+
+        // Verify they actually have what they selected
+        if (paymentMethod === 'credits') {
+            if (!customerData || customerData.class_credits <= 0) {
+                throw new Error("No class credits remaining. Please select 'Pay for This Class' or purchase a class experience pack.");
+            }
+            // Check credit expiration (the DB trigger also checks, but gives a raw SQL error)
+            if (customerData.credits_expires_at && new Date(customerData.credits_expires_at) < new Date()) {
+                throw new Error("Your class credits have expired. Please purchase a new class experience pack.");
+            }
+        }
+        if (paymentMethod === 'membership') {
+            const UNLIMITED_TYPES = ['1 Month Unlimited', '3 Months Unlimited', '6 Months Unlimited', '12 Months Unlimited', 'Founder'];
+            const isFounder = customerData?.membership_type === 'Founder';
+            const valid = customerData && (
+                UNLIMITED_TYPES.includes(customerData.membership_type) && 
+                (isFounder || (customerData.membership_expires_at && 
+                 new Date(customerData.membership_expires_at) > new Date()))
+            );
+            if (!valid) {
+                throw new Error("Your membership has expired. Please select 'Pay for This Class' or renew your plan.");
             }
         }
 
-        // If terms is missing/expired, explicitly block the booking unless it's a new Stripe checkout
-        if (needsTerms) {
-            if (paymentMethod !== 'stripe' || customerData) {
-                alert("Action Required: Your annual liability terms is missing or expired. Please sign the terms to continue booking classes.");
-                window.location.href = `/terms.html?email=${encodeURIComponent(email)}`;
+        // --- WAIVER PRE-CHECK ---
+        if (customerData) {
+            let needsWaiver = false;
+            if (!customerData.waiver_signed_at) {
+                needsWaiver = true;
+            } else {
+                const signedDate = new Date(customerData.waiver_signed_at);
+                const oneYearAgo = new Date();
+                oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+                if (signedDate < oneYearAgo) {
+                    needsWaiver = true;
+                }
+            }
+
+            if (needsWaiver) {
+                const userName = customerData.name || name;
+                if (confirm(`${userName}, your annual liability waiver is missing or expired. Would you like us to email you a secure link to sign the waiver so you can complete your booking?`)) {
+                    await supabase.functions.invoke('booking-alert', {
+                        body: { type: 'send_waiver_link', email: email, name: userName }
+                    });
+                    alert("Email sent! Please check your inbox, sign the waiver, and then return here to finish booking.");
+                }
                 return;
             }
         }
         // --- END WAIVER PRE-CHECK ---
 
-        // 1. Frictionless Anonymous Sign-In
-        const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
-        
-        if (authError) throw authError;
+        // Credit deduction is handled atomically by the database trigger (tr_deduct_credits)
+        // on booking INSERT for both 'credits' and 'membership' payment methods.
+        // No client-side RPC call needed — this prevents race conditions.
 
-        if (paymentMethod === 'stripe') {
-            btn.innerText = 'Redirecting to Secure Checkout...';
-            // Save to localStorage for future auto-fill
-            localStorage.setItem('app_user', JSON.stringify({ name, email }));
-
-            const response = await supabase.functions.invoke('stripe-checkout', {
-                body: { classId, name, email, userId: authData.user.id }
-            });
-
-            if (response.error) throw response.error;
-            if (response.data?.url) {
-                window.location.href = response.data.url;
-                return; // halt execution here since we redirect
-            } else {
-                throw new Error("Could not initialize checkout. Please try again.");
-            }
-        }
-
-        // 2. Insert Booking (Cash/In-Organization Flow)
+        // Insert Booking
         const { error: bookingError } = await supabase
             .from('bookings')
             .insert([
                 { 
                     class_id: classId, 
-                    user_id: authData.user.id,
+                    user_id: null,
                     guest_name: name,
                     guest_email: email,
                     payment_method: paymentMethod,
-                    payment_status: 'pending'
+                    payment_status: 'paid'
                 }
             ]);
 
         if (bookingError) {
-            // Handle unique constraint error (already booked)
             if(bookingError.code === '23505') {
                 throw new Error("You have already booked this class.");
             }
             throw bookingError;
         }
 
-        // Trigger email alert for Cash booking
-        await supabase.functions.invoke('event-alert', {
-            body: { 
-                record: { 
-                    class_id: classId, 
-                    guest_name: name, 
-                    guest_email: email, 
-                    payment_method: paymentMethod 
-                } 
+        // --- LAST CREDIT NOTIFICATION ---
+        if (paymentMethod === 'credits') {
+            const { data: updated } = await supabase.functions.invoke('customer-lookup', {
+                body: { type: 'member_credits', email }
+            });
+
+            if (updated && updated.class_credits === 0) {
+                // Fire-and-forget notification that credits are depleted
+                supabase.functions.invoke('booking-alert', {
+                    body: { type: 'credits_depleted', email: email, name: name }
+                }).catch(err => console.error('Credits depleted notification failed:', err));
             }
-        });
+        }
 
         // Show Success
         document.getElementById('booking-form').classList.add('hidden');
@@ -314,16 +421,19 @@ window.submitBooking = async (event) => {
         localStorage.setItem('app_user', JSON.stringify({ name, email }));
 
     } catch (err) {
+        logError('submitBooking', err.message, err.stack, { classId, email, paymentMethod });
         console.error('Booking failed:', err);
-        alert('Booking failed: ' + err.message);
+        if (err.code === '23505') {
+            alert("Booking failed: You have already booked this class.");
+        } else {
+            alert('Booking failed: ' + err.message);
+        }
     } finally {
         btn.innerText = 'Confirm Booking';
         btn.disabled = false;
     }
 };
 
-// Initialize on load
-document.addEventListener('DOMContentLoaded', loadSchedule);
 window.openProfileModal = () => {
     document.getElementById('profile-modal').classList.remove('hidden');
     document.getElementById('profile-form').classList.remove('hidden');
@@ -340,8 +450,8 @@ window.openProfileModal = () => {
     // Enable the email field if they clicked a button instead of using the waitlist form
     if (!emailInput.value) {
         emailInput.removeAttribute('readonly');
-        emailInput.classList.remove('bg-organization-dark/50', 'text-gray-500', 'cursor-not-allowed');
-        emailInput.classList.add('bg-organization-dark', 'text-white', 'focus:border-organization-gold');
+        emailInput.classList.remove('bg-studio-dark/50', 'text-gray-500', 'cursor-not-allowed');
+        emailInput.classList.add('bg-studio-dark', 'text-white', 'focus:border-studio-gold');
     }
 
     // Auto-fill from localStorage if available
@@ -364,8 +474,8 @@ document.getElementById('waitlist-init-form')?.addEventListener('submit', (e) =>
         const emailInput = document.getElementById('profile-email');
         emailInput.value = email;
         emailInput.setAttribute('readonly', 'true');
-        emailInput.classList.add('bg-organization-dark/50', 'text-gray-500', 'cursor-not-allowed');
-        emailInput.classList.remove('bg-organization-dark', 'text-white', 'focus:border-organization-gold');
+        emailInput.classList.add('bg-studio-dark/50', 'text-gray-500', 'cursor-not-allowed');
+        emailInput.classList.remove('bg-studio-dark', 'text-white', 'focus:border-studio-gold');
         
         openProfileModal();
     }
@@ -385,30 +495,33 @@ document.getElementById('profile-form')?.addEventListener('submit', async (e) =>
     const email = document.getElementById('profile-email').value;
     const name = document.getElementById('profile-name').value;
     const phone = document.getElementById('profile-phone').value;
-    const sex = 'Other'; // Defaulted for women's organization
+    const sex = 'Female'; // Defaulted for women's studio
     const address = document.getElementById('profile-address').value;
     const goals_medical = document.getElementById('profile-goals')?.value || '';
 
     try {
-        // We must authenticate anonymously first so RLS policies evaluating auth.uid() or similar don't reject outright
-        const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
-        if (authError) throw authError;
 
-        const { error } = await supabase.from('customers').upsert({
-            email: email,
-            name: name,
-            phone: phone,
-            sex: sex,
-            address: address,
-            goals_medical: goals_medical,
-            membership_type: 'Waitlist'
+        // Route through edge function — RLS blocks anon UPDATE
+        const { data: saveResult, error: saveErr } = await supabase.functions.invoke('customer-lookup', {
+            body: {
+                type: 'save_profile',
+                email,
+                profile_data: {
+                    name,
+                    phone,
+                    sex,
+                    address,
+                    fitness_goals: goals_medical,
+                }
+            }
         });
 
-        if (error) throw error;
+        if (saveErr) throw saveErr;
+        if (saveResult?.error) throw new Error(saveResult.error);
 
         // Trigger the Welcome Email
         await supabase.functions.invoke('welcome-email', {
-            body: { record: { email, name } }
+            body: { record: { email, name, phone, address, fitness_goals: goals_medical } }
         });
 
         // Save to localStorage for future auto-fill
@@ -419,6 +532,7 @@ document.getElementById('profile-form')?.addEventListener('submit', async (e) =>
         document.getElementById('profile-success-msg').classList.remove('hidden');
 
     } catch (err) {
+        logError('profile-form', err.message, err.stack, { email });
         console.error('Profile creation failed:', err);
         alert('Could not save profile: ' + err.message);
     } finally {
@@ -435,6 +549,17 @@ const verifyStripePayment = async () => {
     const isCancel = urlParams.get('cancel');
 
     if (isCancel) {
+        // Clean up the pending booking so the user can re-book
+        if (bookingId) {
+            try {
+                const email = urlParams.get('email') || '';
+                await supabase.functions.invoke('customer-lookup', {
+                    body: { type: 'cancel_booking', email, booking_id: bookingId }
+                });
+            } catch (e) {
+                console.warn("Could not clean up pending booking:", e);
+            }
+        }
         alert("Payment was cancelled. Your booking was not completed.");
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
@@ -446,35 +571,23 @@ const verifyStripePayment = async () => {
                 body: { session_id: sessionId, booking_id: bookingId }
             });
 
-            if (error) throw error;
+            if (error) {
+                logError('verify-payment-invoke', error.message, null, { sessionId, bookingId });
+                throw error;
+            }
 
             if (data?.status === 'success') {
-                // Get class_id, email, and name from URL params as they were passed in success_url
-                const classId = urlParams.get('class_id');
+                // Email alerts are handled automatically by the database webhook on bookings UPDATE (payment_status -> paid)
+                // No manual invocation needed — the booking-alert Edge Function fires via Supabase webhook
                 const userEmail = urlParams.get('email');
-                const userName = urlParams.get('name');
                 
-                // Trigger email alert for Stripe checkout success
-                if (classId && userName && userEmail) {
-                    await supabase.functions.invoke('event-alert', {
-                        body: { 
-                            record: { 
-                                class_id: classId, 
-                                guest_name: userName, 
-                                guest_email: userEmail, 
-                                payment_method: 'stripe' 
-                            } 
-                        }
-                    });
-                }
-                
-                alert("Payment successful! Your booking is confirmed.");
-                window.location.href = `/terms.html?email=${encodeURIComponent(userEmail || '')}`;
+                window.location.href = `/waiver.html?email=${encodeURIComponent(userEmail || '')}`;
                 return;
             } else {
                 alert("Payment is still pending or failed. Please contact us if you believe this is an error.");
             }
         } catch (err) {
+            logError('verifyStripePayment', err.message, err.stack, { sessionId, bookingId });
             console.error('Error verifying payment:', err);
             alert("There was an issue verifying your payment. We will check it manually.");
         } finally {
@@ -483,10 +596,8 @@ const verifyStripePayment = async () => {
     }
 };
 
-// Membership Checkout Modal Handlers
 window.openMembershipCheckoutModal = () => {
     document.getElementById('membership-checkout-modal').classList.remove('hidden');
-    // Pre-fill if we have local storage cache
     const cachedStr = localStorage.getItem('app_user');
     if (cachedStr) {
         try {
@@ -513,17 +624,23 @@ window.submitMembershipCheckout = async (event) => {
     const preferred_time = document.getElementById('mem-checkout-time')?.value || "";
 
     try {
-        const response = await supabase.functions.invoke('stripe-subscription-checkout', {
+        const response = await supabase.functions.invoke('stripe-membership-checkout', {
             body: { name, email, tier, preferred_time }
         });
 
-        if (response.error) throw response.error;
+        if (response.error) {
+            logError('membership-checkout-invoke', response.error.message, null, { email, tier });
+            throw response.error;
+        }
         if (response.data?.url) {
             window.location.href = response.data.url;
         } else {
-            throw new Error("Could not initialize checkout. Please try again.");
+            const noUrlErr = "No checkout URL returned from server";
+            logError('membership-checkout-no-url', noUrlErr, null, { email, tier });
+            throw new Error(noUrlErr);
         }
     } catch (err) {
+        logError('submitMembershipCheckout', err.message, err.stack, { email, tier });
         console.error('Checkout failed:', err);
         alert('Checkout failed: ' + err.message);
         btn.innerText = 'Secure Checkout';
@@ -531,7 +648,6 @@ window.submitMembershipCheckout = async (event) => {
     }
 };
 
-// Check for Membership Stripe Checkout return
 const verifyMembershipPayment = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('mem_session_id');
@@ -549,20 +665,24 @@ const verifyMembershipPayment = async () => {
 
     if (sessionId && tier && email) {
         try {
-            const { data, error } = await supabase.functions.invoke('verify-subscription-payment', {
+            const { data, error } = await supabase.functions.invoke('verify-membership-payment', {
                 body: { session_id: sessionId, tier, email, name, preferred_time: preferredTime }
             });
 
-            if (error) throw error;
+            if (error) {
+                logError('verify-membership-payment-invoke', error.message, null, { sessionId, email });
+                throw error;
+            }
 
-            if (data?.status === 'success') {
+            if (data?.status === 'success' || data?.status === 'already_processed') {
                 alert(`Membership successful! You purchased: ${tier}.`);
-                window.location.href = `/terms.html?email=${encodeURIComponent(email)}`;
+                window.location.href = `/waiver.html?email=${encodeURIComponent(email)}`;
                 return;
             } else {
                 alert("Payment is still pending or failed. Please contact us if you believe this is an error.");
             }
         } catch (err) {
+            logError('verifyMembershipPayment', err.message, err.stack, { sessionId, email });
             console.error('Error verifying membership payment:', err);
             alert("There was an issue verifying your payment. We will check it manually.");
         } finally {
@@ -571,9 +691,235 @@ const verifyMembershipPayment = async () => {
     }
 };
 
-// Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
     loadSchedule();
     verifyStripePayment();
     verifyMembershipPayment();
+    verifyOneOnOnePayment();
+
+    // Check membership/credits when email is entered — gate booking access
+    const bookingEmail = document.getElementById('booking-email');
+    if (bookingEmail) {
+        bookingEmail.addEventListener('blur', async () => {
+            const email = bookingEmail.value.trim().toLowerCase();
+            if (!email) return;
+
+            const paymentSelect = document.getElementById('booking-payment');
+            const membershipStatus = document.getElementById('membership-status');
+            const submitBtn = document.getElementById('submit-booking-btn');
+            const creditsOption = document.getElementById('option-credits');
+            const membershipOption = document.getElementById('option-membership');
+            const stripeOption = document.getElementById('option-stripe');
+
+            // --- Secure lookup via Edge Function (replaces direct table queries) ---
+            const { data: customer, error: lookupError } = await supabase.functions.invoke('customer-lookup', {
+                body: { type: 'booking_eligibility', email }
+            });
+            if (lookupError) {
+                console.error('Lookup error:', lookupError);
+                return;
+            }
+
+            const UNLIMITED_TYPES = ['1 Month Unlimited', '3 Months Unlimited', '6 Months Unlimited', '12 Months Unlimited', 'Founder'];
+            const isFounder = customer?.membership_type === 'Founder';
+            const hasUnlimitedMembership = customer && customer.found !== false && UNLIMITED_TYPES.includes(customer.membership_type) && 
+                (isFounder || (customer.membership_expires_at && new Date(customer.membership_expires_at) > new Date()));
+
+            // Check credit expiration (30-day rule)
+            const creditsExpired = customer && customer.credits_expires_at && new Date(customer.credits_expires_at) < new Date();
+            const hasCredits = customer && customer.class_credits > 0 && !creditsExpired && !hasUnlimitedMembership;
+
+            // --- PAST-DUE BALANCE CHECK (members never owe) ---
+            if (!hasUnlimitedMembership) {
+                const hasPastDue = customer && customer.unpaid_count > 0;
+
+                if (hasPastDue) {
+                    // Block booking — must settle balance first
+                    if (paymentSelect) paymentSelect.classList.add('hidden');
+                    if (membershipStatus) {
+                        membershipStatus.classList.remove('hidden');
+                        membershipStatus.innerHTML = `
+                            <span class="text-red-400 font-bold">⚠️ Outstanding Balance</span><br/>
+                            <span class="text-gray-400 text-xs">You have ${customer.unpaid_count} unpaid class${customer.unpaid_count > 1 ? 'es' : ''}. Please settle your balance in-studio or contact us before booking another class.</span>
+                        `;
+                        membershipStatus.className = 'w-full bg-red-900/10 border border-red-500/30 rounded-xl px-4 py-3 font-sans text-sm';
+                    }
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                    return;
+                }
+            }
+            // --- END PAST-DUE CHECK ---
+
+            // ─── SMART PAYMENT ROUTING ────────────────────────────
+            // Members & credit holders skip payment selection entirely.
+            // Non-members see cash or online pay options only.
+
+            if (hasUnlimitedMembership) {
+                // ── UNLIMITED MEMBER: auto-book, no dropdown ──
+                if (paymentSelect) paymentSelect.classList.add('hidden');
+                if (membershipStatus) {
+                    membershipStatus.classList.remove('hidden');
+                    membershipStatus.innerHTML = `
+                        <span class="text-studio-gold font-semibold">✦ ${customer.membership_type} Member</span><br/>
+                        <span class="text-gray-400 text-xs">Your membership covers this class — just hit confirm!</span>
+                    `;
+                    membershipStatus.className = 'w-full bg-studio-gold/5 border border-studio-gold/30 rounded-xl px-4 py-3 font-sans text-sm';
+                }
+                paymentSelect.value = 'membership';
+
+            } else if (hasCredits) {
+                // ── CREDIT HOLDER: auto-use credits, no dropdown ──
+                const daysLeft = customer.credits_expires_at ? Math.ceil((new Date(customer.credits_expires_at) - new Date()) / (1000 * 60 * 60 * 24)) : null;
+                if (paymentSelect) paymentSelect.classList.add('hidden');
+                if (membershipStatus) {
+                    membershipStatus.classList.remove('hidden');
+                    membershipStatus.innerHTML = `
+                        <span class="text-studio-gold font-semibold">✦ ${customer.class_credits} Class Credit${customer.class_credits > 1 ? 's' : ''} Available</span><br/>
+                        <span class="text-gray-400 text-xs">1 credit will be used for this booking${daysLeft ? ` · ${daysLeft} day${daysLeft > 1 ? 's' : ''} remaining` : ''}.</span>
+                    `;
+                    membershipStatus.className = 'w-full bg-studio-gold/5 border border-studio-gold/30 rounded-xl px-4 py-3 font-sans text-sm';
+                }
+                paymentSelect.value = 'credits';
+
+            } else {
+                // ── NON-MEMBER: show payment options (cash or online) ──
+                if (membershipStatus) membershipStatus.classList.add('hidden');
+                if (paymentSelect) paymentSelect.classList.remove('hidden');
+
+                // Hide member-only options
+                if (creditsOption) { creditsOption.hidden = true; creditsOption.disabled = true; }
+                if (membershipOption) { membershipOption.hidden = true; membershipOption.disabled = true; }
+
+                // Show available payment methods
+                if (stripeOption) { stripeOption.hidden = false; stripeOption.disabled = false; }
+                const cashOption = document.getElementById('option-cash');
+                if (cashOption) { cashOption.hidden = false; cashOption.disabled = false; }
+
+                paymentSelect.value = 'stripe';
+            }
+
+            // Enable submit
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+    }
 });
+
+// ==========================================
+// 1:1 Private Session Logic
+// ==========================================
+
+window.openOneOnOneModal = () => {
+    document.getElementById('one-on-one-modal').classList.remove('hidden');
+    
+    // Auto-fill from local storage if available
+    const savedUser = localStorage.getItem('app_user');
+    if (savedUser) {
+        try {
+            const { name, email } = JSON.parse(savedUser);
+            if (name) document.getElementById('1on1-name').value = name;
+            if (email) document.getElementById('1on1-email').value = email;
+        } catch (e) {
+            console.error(e);
+        }
+    }
+};
+
+window.closeOneOnOneModal = () => {
+    document.getElementById('one-on-one-modal').classList.add('hidden');
+};
+
+window.update1on1Total = () => {
+    const qty = parseInt(document.getElementById('1on1-quantity').value) || 1;
+    document.getElementById('1on1-total').innerText = '$' + (qty * 75);
+};
+
+window.submitOneOnOnePurchase = async (event) => {
+    event.preventDefault();
+    const btn = document.getElementById('submit-1on1-btn');
+    btn.innerText = 'Redirecting to Secure Checkout...';
+    btn.disabled = true;
+
+    const name = document.getElementById('1on1-name').value;
+    const email = document.getElementById('1on1-email').value;
+    const quantity = document.getElementById('1on1-quantity').value;
+    const goalSummary = document.getElementById('1on1-goals').value;
+
+    try {
+        localStorage.setItem('app_user', JSON.stringify({ name, email }));
+
+        const response = await supabase.functions.invoke('stripe-1on1-checkout', {
+            body: { quantity, goalSummary, name, email }
+        });
+
+        if (response.error) {
+            logError('stripe-1on1-checkout-invoke', response.error.message, null, { email, quantity });
+            throw response.error;
+        }
+        if (response.data?.url) {
+            window.location.href = response.data.url;
+        } else {
+            const noUrlErr = "No checkout URL returned from server";
+            logError('stripe-1on1-checkout-no-url', noUrlErr, null, { email });
+            throw new Error(noUrlErr);
+        }
+    } catch (err) {
+        logError('submitOneOnOnePurchase', err.message, err.stack, { email });
+        console.error('1:1 Purchase Error:', err);
+        alert('Checkout initialization failed: ' + err.message);
+        btn.innerText = 'Pay Now';
+        btn.disabled = false;
+    }
+};
+
+const verifyOneOnOnePayment = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('one_on_one_success');
+    const cancel = urlParams.get('one_on_one_cancel');
+    const sessionId = urlParams.get('oo_session_id');
+    const email = urlParams.get('email');
+    const quantity = parseInt(urlParams.get('quantity')) || 1;
+
+    if (cancel) {
+        alert("1:1 Session purchase was cancelled.");
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+    }
+
+    if (success && sessionId && email) {
+        try {
+            const { data, error } = await supabase.functions.invoke('verify-membership-payment', {
+                body: { 
+                    session_id: sessionId, 
+                    tier: 'one_on_one', 
+                    email, 
+                    name: JSON.parse(localStorage.getItem('app_user') || '{}').name || '',
+                    quantity 
+                }
+            });
+
+            if (error) throw error;
+
+            if (data?.status === 'success' || data?.status === 'already_processed') {
+                alert("Payment successful! A {{CLIENT_NAME}} instructor will reach out within 24 hours to schedule your individual 1:1 sessions.");
+            } else {
+                alert("Payment is still pending. If you believe this is an error, please contact us.");
+            }
+        } catch (err) {
+            logError('verifyOneOnOnePayment', err.message, err.stack, { sessionId, email });
+            console.error('1:1 Payment verification failed:', err);
+            alert("Payment successful! A {{CLIENT_NAME}} instructor will reach out within 24 hours to schedule your sessions.");
+        } finally {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    } else if (success) {
+        // Legacy fallback — no session_id in URL
+        alert("Payment successful! A {{CLIENT_NAME}} instructor will reach out within 24 hours to schedule your individual 1:1 sessions.");
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+};

@@ -7,25 +7,36 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
 
 serve(async (req) => {
   try {
-    // 1. Create Coupon for 1-Month ($50 off)
+    // 1. Create Coupon for 1-Month ($260 off to make total $200)
     let coupon1M;
     try {
-      coupon1M = await stripe.coupons.retrieve('coupon_1M_First5_v1');
+      coupon1M = await stripe.coupons.retrieve('coupon_1M_First5_v2');
     } catch {
       coupon1M = await stripe.coupons.create({
-        id: 'coupon_1M_First5_v1',
-        amount_off: 5000,
+        id: 'coupon_1M_First5_v2',
+        amount_off: 26000,
         currency: 'usd',
         duration: 'once',
-        name: 'First 5 - 1 Month Discount',
+        name: 'First 5 - 1 Month Discount ($200 Total)',
       });
     }
 
     // 2. Create Promo Code for 1-Month
     let promo1M;
-    const promo1M_list = await stripe.promotionCodes.list({ code: 'FIRST5-1M' });
+    const promo1M_list = await stripe.promotionCodes.list({ code: 'FIRST5-1M', active: true });
     if (promo1M_list.data.length > 0) {
-      promo1M = promo1M_list.data[0];
+      // If the existing promo uses the old coupon, we should deactivate it and create a new one
+      const currentPromo = promo1M_list.data[0];
+      if (currentPromo.coupon.id !== coupon1M.id) {
+          await stripe.promotionCodes.update(currentPromo.id, { active: false });
+          promo1M = await stripe.promotionCodes.create({
+            coupon: coupon1M.id,
+            code: 'FIRST5-1M',
+            max_redemptions: 5,
+          });
+      } else {
+          promo1M = currentPromo;
+      }
     } else {
       promo1M = await stripe.promotionCodes.create({
         coupon: coupon1M.id,

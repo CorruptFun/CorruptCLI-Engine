@@ -29,9 +29,9 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // 1. Fetch Class
+    // 1. Fetch Class & Check Capacity
     const { data: classData, error: classError } = await supabaseAdmin
-      .from('classes')
+      .from('class_availability')
       .select('*')
       .eq('id', classId)
       .single();
@@ -40,8 +40,12 @@ serve(async (req) => {
       throw new Error("Class not found");
     }
 
+    if (classData.booked_count >= classData.capacity) {
+        throw new Error("This class is now full. Please select another time.");
+    }
+
     // 2. Insert Pending Booking
-    const { data: booking, error: bookingError } = await supabaseAdmin
+    let { data: booking, error: bookingError } = await supabaseAdmin
       .from('bookings')
       .insert([
         { 
@@ -58,10 +62,56 @@ serve(async (req) => {
 
     if (bookingError) {
       if(bookingError.code === '23505') {
-        throw new Error("You have already booked this class.");
+        // Check if the existing booking is a stale pending one from a cancelled checkout
+        const { data: existingBooking } = await supabaseAdmin
+          .from('bookings')
+          .select('id, payment_status')
+          .eq('class_id', classId)
+          .eq('guest_email', email)
+          .single();
+
+        if (existingBooking?.payment_status === 'pending') {
+          // Delete the stale pending booking and retry
+          await supabaseAdmin.from('bookings').delete().eq('id', existingBooking.id);
+          
+          const { data: retryBooking, error: retryError } = await supabaseAdmin
+            .from('bookings')
+            .insert([{ 
+              class_id: classId, 
+              user_id: userId,
+              guest_name: name,
+              guest_email: email,
+              payment_method: 'stripe',
+              payment_status: 'pending'
+            }])
+            .select()
+            .single();
+
+          if (retryError) throw retryError;
+          // Use the retried booking going forward
+          booking = retryBooking;
+        } else {
+          throw new Error("You have already booked this class.");
+        }
+      } else {
+        throw bookingError;
       }
-      throw bookingError;
     }
+
+    // --- DATA CAPTURE ---
+    // Ensure they are in the customers table, but don't overwrite existing membership
+    const { data: existingCust } = await supabaseAdmin
+      .from('customers')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (!existingCust) {
+      await supabaseAdmin
+        .from('customers')
+        .insert({ email, name, membership_type: 'Waitlist' });
+    }
+    // --- END DATA CAPTURE ---
 
     // 3. Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -72,7 +122,7 @@ serve(async (req) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `SaaS Boilerplate Class: ${classData.title}`,
+              name: `{{CLIENT_NAME}} Class: ${classData.title}`,
               description: `Instructor: ${classData.instructor_name} | Date: ${new Date(classData.start_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`,
             },
             unit_amount: Math.round(classData.price * 100), // convert dollars to cents
@@ -81,9 +131,8 @@ serve(async (req) => {
         },
       ],
       mode: 'payment',
-      allow_promotion_codes: true,
-      success_url: `${req.headers.get('origin') || 'https://www.yourdomain.com'}?session_id={CHECKOUT_SESSION_ID}&booking_id=${booking.id}&class_id=${classId}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`,
-      cancel_url: `${req.headers.get('origin') || 'https://www.yourdomain.com'}?cancel=true&booking_id=${booking.id}`,
+      success_url: `${req.headers.get('origin') || 'https://www.{{CLIENT_DOMAIN}}'}?session_id={CHECKOUT_SESSION_ID}&booking_id=${booking.id}&class_id=${classId}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`,
+      cancel_url: `${req.headers.get('origin') || 'https://www.{{CLIENT_DOMAIN}}'}?cancel=true&booking_id=${booking.id}&email=${encodeURIComponent(email)}`,
       metadata: {
         booking_id: booking.id,
         class_id: classId,

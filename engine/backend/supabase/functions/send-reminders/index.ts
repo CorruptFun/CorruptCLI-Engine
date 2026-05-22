@@ -53,7 +53,7 @@ serve(async (req) => {
               Authorization: `Bearer ${RESEND_API_KEY}`,
             },
             body: JSON.stringify({
-              from: "SaaS Boilerplate <bookings@updates.yourdomain.com>",
+              from: "{{CLIENT_NAME}} <bookings@updates.{{CLIENT_DOMAIN}}>",
               to: [booking.guest_email],
               subject: `Reminder: ${cls.title} starts in 3 hours!`,
               html: `<div style="font-family: sans-serif; color: #111; max-width: 600px; margin: 0 auto; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;">
@@ -69,7 +69,7 @@ serve(async (req) => {
                           <p style="margin: 0; font-size: 16px;"><strong>Time:</strong> ${timeStr}</p>
                         </div>
 
-                        <p style="font-size: 14px; color: #6B7280; line-height: 1.5;">We look forward to seeing you at the organization. If you need to cancel, please log in or contact us as soon as possible.</p>
+                        <p style="font-size: 14px; color: #6B7280; line-height: 1.5;">We look forward to seeing you at the studio. If you need to cancel, please log in or contact us as soon as possible.</p>
                       </div>
                      </div>`,
             }),

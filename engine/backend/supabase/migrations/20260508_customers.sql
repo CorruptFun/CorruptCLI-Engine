@@ -9,4 +9,4 @@ CREATE TABLE public.customers (
 ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Admins can manage customers" ON public.customers 
-FOR ALL USING ( auth.jwt() ->> 'email' IN ('admin@example.com', 'YOUR_SUPER_ADMIN_EMAIL') );
+FOR ALL USING ( auth.jwt() ->> 'email' IN ('{{ADMIN_EMAIL}}', '{{DEV_EMAIL}}') );

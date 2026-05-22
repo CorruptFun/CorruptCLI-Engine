@@ -1,17 +1,23 @@
 ---
-name: Bug report
-about: Create a report to help us improve the engine
-title: "[BUG] "
-labels: bug
-assignees: ''
-
+name: Bug Report
+about: Report a bug in the engine
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear description of the issue.
 
-**To Reproduce**
-Steps to reproduce the behavior.
+**Component**
+- [ ] Frontend (HTML/JS)
+- [ ] Edge Function
+- [ ] Database/Migration
+- [ ] Scaffolding (corrupt.py)
+
+**Steps to reproduce**
+1. ...
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+What should happen.
+
+**Environment**
+- Supabase plan: [Free/Pro]
+- Browser: [Chrome/Safari/Firefox]
